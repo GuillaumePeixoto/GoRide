@@ -1,0 +1,17 @@
+{
+  "name": "Reservation Vehicules Dev",
+  "dockerComposeFile": "docker-compose.yml",  // Utilise le docker-compose dans .devcontainer/
+  "service": "app",                           // Service principal
+  "workspaceFolder": "/workspace",            // Dossier de travail dans le conteneur
+  "forwardPorts": [8000, 5173, 3306, 8081],  // Remplace 8080 par 5173        // Ports exposés
+  "postCreateCommand": "bash -c 'cd /workspace/backend && composer install && cd /workspace/frontend && npm install && cd /workspace/backend && symfony server:start --port=8000 --no-tls && cd /workspace/frontend && npm run dev -- --host'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "octref.vetur",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  }
+}

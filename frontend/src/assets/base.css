@@ -1,0 +1,23 @@
+body{
+  margin: 0px;
+  min-height: 100vh;
+}
+
+main{
+    padding: 0px;
+    margin: 0px;
+}
+
+#app{
+    display: block; /* Ou inline-block si besoin */
+    width: 100%;
+    height: 100%;
+}
+
+.gold-font-color{
+  color: #c49a52;
+}
+
+.background-light-black{
+    background-color: #221f1f;
+}
