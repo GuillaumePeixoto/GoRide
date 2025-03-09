@@ -1,35 +1,52 @@
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue'
-    import flatpickr from 'flatpickr'
-    import 'flatpickr/dist/flatpickr.min.css' // Importer le CSS de Flatpickr
-    import { French } from 'flatpickr/dist/l10n/fr.js'
+import { ref, onMounted } from 'vue'
+import flatpickr from 'flatpickr'
+import 'flatpickr/dist/flatpickr.min.css'
+import { French } from 'flatpickr/dist/l10n/fr.js'
 
-    // Déclaration des données
-    const vehicleSearch = ref('')
-    const isUtilityVehicle = ref(false)
+// Déclaration des données
+const villeSearch = ref('')
+const isUtilityVehicle = ref(false)
+const startDate = ref<string | null>(null)
+const endDate = ref<string | null>(null)
 
-    const startDate = ref(null)
-    const endDate = ref(null)
+// Références pour Flatpickr
+const startDateInput = ref<HTMLInputElement | null>(null)
+const endDateInput = ref<HTMLInputElement | null>(null)
 
-    // Fonction pour initialiser les datepickers
-    onMounted(() => {
-    // Vérifie que les éléments sont bien présents dans le DOM avant d'initialiser Flatpickr
-    if (startDate.value) {
-        flatpickr(startDate.value, {
+// Fonction pour initialiser les datepickers
+onMounted(() => {
+    if (startDateInput.value) {
+        flatpickr(startDateInput.value, {
             dateFormat: 'Y-m-d',
-            inline: true, // Affichage en plein format
+            inline: true,
             locale: French,
+            onChange: (selectedDates) => {
+                startDate.value = selectedDates[0] ? selectedDates[0].toLocaleDateString('fr-CA') : null;
+            }
         })
     }
 
-    if (endDate.value) {
-        flatpickr(endDate.value, {
+    if (endDateInput.value) {
+        flatpickr(endDateInput.value, {
             dateFormat: 'Y-m-d',
-            inline: true, // Affichage en plein format
+            inline: true,
             locale: French,
+            onChange: (selectedDates) => {
+                endDate.value = selectedDates[0] ? selectedDates[0].toLocaleDateString('fr-CA') : null
+            }
         })
     }
-    })
+})
+
+// Fonction de recherche
+const searchVehicles = () => {
+    console.log("Recherche en cours...")
+    console.log("Date de départ :", startDate.value)
+    console.log("Date d'arrivée :", endDate.value)
+    console.log("Véhicule recherché :", villeSearch.value)
+    console.log("Type de véhicule :", isUtilityVehicle.value ? "Utilitaire" : "Classique")
+}
 </script>
 
 <template>
@@ -37,24 +54,28 @@
         <div class="search-date-filter">
             <div class="bloc-date-picker">
                 <p>Date de départ</p>
-                <input type="text" class="date-flatpicker" ref="startDate" placeholder="Date de départ">
+                <input type="text" class="date-flatpicker" ref="startDateInput" placeholder="Date de départ">
             </div>
             <div class="bloc-date-picker">
                 <p>Date d'arrivée</p>
-                <input type="text" class="date-flatpicker" ref="endDate" placeholder="Date d'arrivée">
+                <input type="text" class="date-flatpicker" ref="endDateInput" placeholder="Date d'arrivée">
             </div>
         </div>
-        <div class="search-type-city" style="display: flex">
-            <input type="text" id="vehicle-search" placeholder="Rechercher un véhicule...">
-            <ul id="suggestions" class="suggestions-list"></ul>
+        
+        <div class="search-type-city">
+            <input type="text" id="ville-search" v-model="villeSearch" placeholder="Rechercher une ville">
 
             <div class="switch-container">
                 <span>Véhicule</span>
                 <label class="switch">
-                    <input type="checkbox" id="vehicle-type">
+                    <input type="checkbox" v-model="isUtilityVehicle">
                     <span class="slider"></span>
                 </label>
                 <span>Utilitaire</span>
+            </div>
+
+            <div class="search-button-valid">
+                <button @click="searchVehicles">Rechercher</button>
             </div>
         </div>
     </div>
@@ -74,8 +95,21 @@
         margin: 0 auto;
         flex-direction: column;
         gap: 10px;
-        background-color: #3d3b3b;
+        background-color: #3d3b3be1;
         border-radius: 8px;
+    }
+
+    .search-button-valid{
+        display: flex;
+        justify-content: center;
+        vertical-align: middle;
+    }
+
+    .search-button-valid button{
+        width: 130px;
+        height: 30px;
+        border-radius: 5px;
+        font-weight: bold;
     }
 
     .search-date-filter{
