@@ -4,7 +4,7 @@
   "service": "app",                           // Service principal
   "workspaceFolder": "/workspace",            // Dossier de travail dans le conteneur
   "forwardPorts": [8081],
-  "postCreateCommand": "bash -c 'cd /workspace/backend && composer install && cd /workspace/frontend && npm install && cd /workspace/backend && symfony server:start --port=8000 --no-tls && cd /workspace/frontend && npm run dev --host'",
+  "postCreateCommand": "bash -c 'cd /workspace/frontend && npm install && cd ../backend && composer install'",
   "customizations": {
     "vscode": {
       "extensions": [

@@ -27,5 +27,7 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash && \
 # Set working directory
 WORKDIR /workspace
 
+RUN npm install -g vite
+
 # Expose ports (si besoin)
 EXPOSE 8000 8080
