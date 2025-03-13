@@ -1,0 +1,105 @@
+/* .flatpickr-calendar{
+    background-color: #221f1f;
+    border: 1px solid #221f1f;
+    color: white;
+    box-shadow: 1px 0 0 #111010,-1px 0 0 #111010,0 1px 0 #111010,0 -1px 0 #111010,0 3px 13px rgba(0,0,0,0.08)
+}
+
+select.flatpickr-monthDropdown-months, .flatpickr-current-month input.cur-year{
+    color: white !important;
+} */
+
+
+/* Fond principal du calendrier */
+.flatpickr-calendar {
+  background-color: #221f1f;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* Fleche mois */
+.flatpickr-prev-month, .flatpickr-next-month{
+    color: white !important;
+    fill: white !important;
+}
+
+/* En-tête mois/année */
+.flatpickr-months {
+  background-color: #221f1f;
+  color: #ffffff;
+  border-bottom: 1px solid #444;
+}
+
+.flatpickr-current-month {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.flatpickr-weekday {
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+/* Jours normaux */
+.flatpickr-day {
+  background: transparent;
+  color: #ffffff;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+/* Jours du mois d'avant/après */
+.flatpickr-day.nextMonthDay, .flatpickr-day.prevMonthDay{
+    color: #535050;
+}
+
+.flatpickr-day.nextMonthDay:hover, .flatpickr-day.prevMonthDay:hover{
+    background-color: #c49a52;
+}
+
+/* Jours bloqués du mois d'avant/après */
+
+.flatpickr-day.nextMonthDay.flatpickr-disabled, .flatpickr-day.prevMonthDay.flatpickr-disabled,
+.flatpickr-day.nextMonthDay.flatpickr-disabled:hover, .flatpickr-day.prevMonthDay.flatpickr-disabled:hover{
+    cursor: not-allowed !important;
+    color: rgba(57,57,57,0.1) !important;
+    background-color: #221f1f  !important;
+}
+
+/* Hover sur un jour */
+.flatpickr-day:hover {
+  background-color: #c49a52;
+  color: #000000;
+}
+
+/* Jour sélectionné */
+.flatpickr-day.selected, .flatpickr-day.selected:hover, .flatpickr-day.nextMonthDay.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background-color: #c49a52;
+  border: none;
+  color: #000000;
+}
+
+/* Boutons précédent/suivant */
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  color: #ffffff;
+  transition: color 0.2s ease;
+}
+
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+  color: #c49a52;
+}
+
+.numInputWrapper:hover .arrowUp, .numInputWrapper:hover .arrowDown{
+    color: white;
+    fill: white;
+}
+
+.flatpickr-current-month .numInputWrapper span.arrowUp:after, .flatpickr-current-month .numInputWrapper span.arrowDown:after{
+    border-bottom-color: rgb(255 255 255 / 90%);
+    border-top-color: rgb(255 255 255 / 90%);
+}

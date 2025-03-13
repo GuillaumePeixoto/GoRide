@@ -1,4 +1,8 @@
 @import './base.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 /* -------------------- HEADER / FOOTER -------------------- */
 
@@ -64,6 +68,19 @@ footer ul{
 }
 
 /* Style réutilisable */
+
+.message-erreur{
+    border: 2px solid rgb(240, 31, 31);
+    border-radius: 4px;
+    background-color: rgba(248, 70, 70, 0.699);
+    color: white;
+    padding: 8px;
+    margin-bottom: 20px;
+}
+
+.background-light-black-opacity{
+    background-color: #3d3b3be1;
+}
 
 .no-style-li{
     margin: 0px 8px;

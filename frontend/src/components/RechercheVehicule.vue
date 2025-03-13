@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
+import '@/assets/custom-flatpickr.css'
 import { French } from 'flatpickr/dist/l10n/fr.js'
 
 // Déclaration des données
@@ -9,6 +10,8 @@ const villeSearch = ref('')
 const isUtilityVehicle = ref(false)
 const startDate = ref<string | null>(null)
 const endDate = ref<string | null>(null)
+
+const erreur = ref('');
 
 // Références pour Flatpickr
 const startDateInput = ref<HTMLInputElement | null>(null)
@@ -21,6 +24,7 @@ onMounted(() => {
             dateFormat: 'Y-m-d',
             inline: true,
             locale: French,
+            minDate: 'today',
             onChange: (selectedDates) => {
                 startDate.value = selectedDates[0] ? selectedDates[0].toLocaleDateString('fr-CA') : null;
             }
@@ -32,6 +36,7 @@ onMounted(() => {
             dateFormat: 'Y-m-d',
             inline: true,
             locale: French,
+            minDate: 'today',
             onChange: (selectedDates) => {
                 endDate.value = selectedDates[0] ? selectedDates[0].toLocaleDateString('fr-CA') : null
             }
@@ -41,6 +46,13 @@ onMounted(() => {
 
 // Fonction de recherche
 const searchVehicles = () => {
+
+    erreur.value = '';
+    if(startDate.value > endDate.value || endDate.value < startDate.value){
+        erreur.value = "Les dates sélectionnées sont incorrectes";
+        return;
+    }
+
     console.log("Recherche en cours...")
     console.log("Date de départ :", startDate.value)
     console.log("Date d'arrivée :", endDate.value)
@@ -51,6 +63,9 @@ const searchVehicles = () => {
 
 <template>
     <div class="search-container">
+        <div v-if="erreur" class="message-erreur">
+            {{ erreur }}
+        </div>
         <div class="search-date-filter">
             <div class="bloc-date-picker">
                 <p>Date de départ</p>
@@ -73,10 +88,9 @@ const searchVehicles = () => {
                 </label>
                 <span>Utilitaire</span>
             </div>
-
-            <div class="search-button-valid">
-                <button @click="searchVehicles">Rechercher</button>
-            </div>
+        </div>
+        <div class="search-button-valid">
+            <button @click="searchVehicles">Rechercher</button>
         </div>
     </div>
 </template>
@@ -100,6 +114,7 @@ const searchVehicles = () => {
     }
 
     .search-button-valid{
+        margin-top: 20px;
         display: flex;
         justify-content: center;
         vertical-align: middle;
@@ -120,7 +135,7 @@ const searchVehicles = () => {
 
     .search-type-city{
         display: flex;
-        margin-top: 40px;
+        margin-top: 20px;
         justify-content: space-around;
         color: rgb(210, 210, 210);
     }
@@ -128,6 +143,7 @@ const searchVehicles = () => {
     .bloc-date-picker p{
         text-align: center;
         margin-top: 0px;
+        margin-bottom: 5px;
         color: rgb(210, 210, 210);
         font-size: 18px;
     }
