@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AgenceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AgenceRepository::class)]
@@ -24,6 +26,17 @@ class Agence
 
     #[ORM\Column(length: 255)]
     private ?string $telephone = null;
+
+    /**
+     * @var Collection<int, Vehicule>
+     */
+    #[ORM\OneToMany(targetEntity: Vehicule::class, mappedBy: 'agence')]
+    private Collection $vehicules;
+
+    public function __construct()
+    {
+        $this->vehicules = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -74,6 +87,36 @@ class Agence
     public function setTelephone(string $telephone): static
     {
         $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Vehicule>
+     */
+    public function getVehicules(): Collection
+    {
+        return $this->vehicules;
+    }
+
+    public function addVehicule(Vehicule $vehicule): static
+    {
+        if (!$this->vehicules->contains($vehicule)) {
+            $this->vehicules->add($vehicule);
+            $vehicule->setAgence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVehicule(Vehicule $vehicule): static
+    {
+        if ($this->vehicules->removeElement($vehicule)) {
+            // set the owning side to null (unless already changed)
+            if ($vehicule->getAgence() === $this) {
+                $vehicule->setAgence(null);
+            }
+        }
 
         return $this;
     }

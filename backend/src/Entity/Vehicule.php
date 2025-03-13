@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VehiculeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,6 +42,27 @@ class Vehicule
 
     #[ORM\Column(nullable: true)]
     private ?array $photo_vehicule = null;
+
+    /**
+     * @var Collection<int, Tarification>
+     */
+    #[ORM\OneToMany(targetEntity: Tarification::class, mappedBy: 'vehicule', orphanRemoval: true)]
+    private Collection $tarifications;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'vehicule')]
+    private Collection $reservations;
+
+    #[ORM\ManyToOne(inversedBy: 'vehicules')]
+    private ?Agence $agence = null;
+
+    public function __construct()
+    {
+        $this->tarifications = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -150,6 +173,78 @@ class Vehicule
     public function setPhotoVehicule(?array $photo_vehicule): static
     {
         $this->photo_vehicule = $photo_vehicule;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tarification>
+     */
+    public function getTarifications(): Collection
+    {
+        return $this->tarifications;
+    }
+
+    public function addTarification(Tarification $tarification): static
+    {
+        if (!$this->tarifications->contains($tarification)) {
+            $this->tarifications->add($tarification);
+            $tarification->setVehicule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTarification(Tarification $tarification): static
+    {
+        if ($this->tarifications->removeElement($tarification)) {
+            // set the owning side to null (unless already changed)
+            if ($tarification->getVehicule() === $this) {
+                $tarification->setVehicule(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setVehicule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getVehicule() === $this) {
+                $reservation->setVehicule(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAgence(): ?Agence
+    {
+        return $this->agence;
+    }
+
+    public function setAgence(?Agence $agence): static
+    {
+        $this->agence = $agence;
 
         return $this;
     }
