@@ -2,6 +2,8 @@
 
     import { reactive, computed } from 'vue';
     import { registerUser, type RegisterForm } from '/workspace/frontend/src/services/UserServices';
+    import { useRouter } from 'vue-router'
+
 
     const form = reactive<RegisterForm>({
         nom: '',
@@ -14,6 +16,8 @@
         ville: '',
         codePostal: ''
     });
+
+    const router = useRouter()
 
     const isFormValid = computed(() => {
         return (
@@ -34,6 +38,7 @@
         try {
             const response = await registerUser(form);
             console.log('Inscription réussie:', response.data);
+            router.push('/')
         } catch (error: any) {
             if (error.response) {
                 console.error('Erreur:', error.response.data);
@@ -178,7 +183,7 @@
         font-family: Arial, Helvetica, sans-serif;
         padding: 20px;
         margin: 0 auto;
-        margin-top: 20px;
+        margin-top: 4em;
         border-radius: 6px;
     }
 
