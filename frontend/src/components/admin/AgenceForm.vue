@@ -26,13 +26,13 @@
 
 <script setup>
 import { ref } from 'vue';
-import AgenceService from '@/services/AgenceService';
+import AgenceServices from '@/services/AgenceServices';
 
 const form = ref({ nom: '', adresse: '', ville: '', telephone: '' });
 
 const submitForm = async () => {
   try {
-    await AgenceService.addAgence(form.value);
+    await AgenceServices.addAgence(form.value);
     alert('Agence ajoutée avec succès');
     form.value = { nom: '', adresse: '', ville: '', telephone: '' }; // Reset form
   } catch (error) {

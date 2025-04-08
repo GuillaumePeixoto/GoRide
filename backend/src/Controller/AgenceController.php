@@ -11,15 +11,19 @@
     use Symfony\Component\Routing\Annotation\Route;
     use Symfony\Component\Security\Http\Attribute\IsGranted;
     use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\Serializer\SerializerInterface;
 
     #[Route('/api/agences', name: 'api_agences_')]
     class AgenceController extends AbstractController
     {
         #[Route('', name: 'list', methods: ['GET'])]
-        public function list(AgenceRepository $agenceRepository): JsonResponse
+        public function list(AgenceRepository $agenceRepository, SerializerInterface $serializer)
         {
             $agences = $agenceRepository->findAll();
-            return new JsonResponse([$agences]);
+
+            $json = $serializer->serialize($agences, 'json', ['groups' => 'agence:read']);
+
+            return new JsonResponse($json, 200, [], true);
         }
 
         #[Route('', name: 'create', methods: ['POST'])]
