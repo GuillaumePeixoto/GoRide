@@ -1,8 +1,30 @@
-import axios from 'axios';
+import axios from "axios";
+import AuthService from "@/services/AuthService";
 
-const API_BASE_URL = import.meta.env.VITE_PHP_API_URL;
+const API_URL = "http://localhost:8000/api/vehicules";
 
-export const getVehicules = () => axios.get(`${API_BASE_URL}/vehicules`);
-export const getVehiculeById = (id) => axios.get(`${API_BASE_URL}/vehicules/${id}`);
-export const createVehicule = (data) => axios.post(`${API_BASE_URL}/vehicules`, data);
+export default {
+    async getVehicules() {
+        try {
+            const response = await axios.get(API_URL);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la récupération des véhicules:", error);
+            throw error;
+        }
+    },
 
+    async addVehicule(vehiculeData: any) {
+        try {
+            const response = await axios.post(API_URL, vehiculeData, {
+                headers: {
+                    Authorization: `Bearer ${AuthService.getToken()}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de l'ajout du véhicule:", error);
+            throw error;
+        }
+    },
+};
