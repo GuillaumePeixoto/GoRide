@@ -6,6 +6,7 @@ use App\Repository\VehiculeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VehiculeRepository::class)]
@@ -14,33 +15,43 @@ class Vehicule
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['vehicule:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 200)]
+    #[Groups(['vehicule:read'])]
     private ?string $marque = null;
 
     #[ORM\Column(length: 200)]
+    #[Groups(['vehicule:read'])]
     private ?string $modele = null;
 
     #[ORM\Column]
+    #[Groups(['vehicule:read'])]
     private ?int $nb_porte = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['vehicule:read'])]
     private ?string $couleur = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['vehicule:read'])]
     private ?string $photo_presentation = null;
 
     #[ORM\Column]
+    #[Groups(['vehicule:read'])]
     private ?int $kilometrage = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['vehicule:read'])]
     private ?string $presentation_vehicule = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['vehicule:read'])]
     private ?string $remarque = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['vehicule:read'])]
     private ?array $photo_vehicule = null;
 
     /**
@@ -57,6 +68,14 @@ class Vehicule
 
     #[ORM\ManyToOne(inversedBy: 'vehicules')]
     private ?Agence $agence = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['vehicule:read'])]
+    private ?string $type_vehicule = null;
+
+    #[ORM\Column]
+    #[Groups(['vehicule:read'])]
+    private ?bool $isUtilitaire = null;
 
     public function __construct()
     {
@@ -245,6 +264,30 @@ class Vehicule
     public function setAgence(?Agence $agence): static
     {
         $this->agence = $agence;
+
+        return $this;
+    }
+
+    public function getTypeVehicule(): ?string
+    {
+        return $this->type_vehicule;
+    }
+
+    public function setTypeVehicule(string $type_vehicule): static
+    {
+        $this->type_vehicule = $type_vehicule;
+
+        return $this;
+    }
+
+    public function isUtilitaire(): ?bool
+    {
+        return $this->isUtilitaire;
+    }
+
+    public function setIsUtilitaire(bool $isUtilitaire): static
+    {
+        $this->isUtilitaire = $isUtilitaire;
 
         return $this;
     }

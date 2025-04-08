@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AgenceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AgenceRepository::class)]
@@ -13,18 +14,23 @@ class Agence
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['agence:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['agence:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['agence:read'])]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['agence:read'])]
     private ?string $ville = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['agence:read'])]
     private ?string $telephone = null;
 
     /**
