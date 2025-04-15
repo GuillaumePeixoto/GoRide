@@ -1,14 +1,9 @@
 # Démarrer le projet
 
 Ce projet utilise Symfony pour le backend et Vue.js/Nuxt pour le frontend.
+Ce projet me sert de support pour apprendre VueJS
 
 ## Script d'exécution
-
-### Symfony
-
-```bash
-cd /workspace/backend && symfony server:start --port=8000 --no-tls
-```
 
 ### VueJS
 
