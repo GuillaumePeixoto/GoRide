@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
+use App\Repository\UserRepository;
 
 final class UserController extends AbstractController
 {
@@ -19,6 +20,13 @@ final class UserController extends AbstractController
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/UserController.php',
         ]);
+    }
+
+    #[Route('/api/users', methods: ['GET'])]
+    public function list(UserRepository $userRepository): JsonResponse
+    {
+        $users = $userRepository->findAll();
+        return $this->json($users, 200, [], ['groups' => 'user:read']);
     }
 
     #[Route('/user/inscription', name: 'api_register', methods: ['POST'])]
