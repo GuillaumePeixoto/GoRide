@@ -5,6 +5,7 @@ services:
       context: ../
       dockerfile: .devcontainer/Dockerfile
     volumes:
+      - ~/.ssh:/root/.ssh:ro # Remonte la clé SSH dans le devcontainer
       - ../:/workspace
       - ../frontend/.env:/workspace/frontend/.env:ro
     ports:
