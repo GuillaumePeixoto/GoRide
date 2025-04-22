@@ -18,7 +18,7 @@ class Agence
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['agence:read'])]
+    #[Groups(['agence:read', 'vehicule:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]

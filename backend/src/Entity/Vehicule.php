@@ -67,6 +67,7 @@ class Vehicule
     private Collection $reservations;
 
     #[ORM\ManyToOne(inversedBy: 'vehicules')]
+    #[Groups(['vehicule:read'])]
     private ?Agence $agence = null;
 
     #[ORM\Column(length: 255)]

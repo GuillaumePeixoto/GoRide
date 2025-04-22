@@ -15,6 +15,7 @@
                     <th class="py-2 text-white">Modèle</th>
                     <th class="py-2 text-white">Kilométrage</th>
                     <th class="py-2 text-white">Type de véhicule</th>
+                    <th class="py-2 text-white">Agence</th>
                     <th class="py-2 text-white">Action</th>
                 </tr>
             </thead>
@@ -24,6 +25,7 @@
                     <td class="py-2 text-center text-white">{{ vehicule.modele }}</td>
                     <td class="py-2 text-center text-white">{{ vehicule.kilometrage }}</td> 
                     <td class="py-2 text-center text-white capitalize-first">{{ vehicule.type_vehicule }}</td>
+                    <td class="py-2 text-center text-white capitalize-first">{{ vehicule.agence.nom }}</td>
                     <td class="py-2 text-center text-white">Fiche / Modif / Delete</td>
                 </tr>
             </tbody>

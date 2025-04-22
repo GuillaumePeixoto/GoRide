@@ -28,9 +28,8 @@ class VehiculeController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function add(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        dd($request->request->all(), $request->files->all());
+        // $data = json_decode($request->getContent(), true);
+        $data = $request->request->all();
 
         $vehicule = new Vehicule();
         $vehicule->setMarque($data['marque']);
@@ -54,6 +53,7 @@ class VehiculeController extends AbstractController
         if (!$agence) {
             return $this->json(['message' => 'Agence non trouvée'], 404);
         }
+        
         $vehicule->setAgence($agence);
 
         $photoPresentation = $request->files->get('photo_presentation');
