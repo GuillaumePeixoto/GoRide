@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
     import { reactive, computed } from 'vue';
-    import { registerUser, type RegisterForm } from '/workspace/frontend/src/services/UserServices';
+    import UserService, { type RegisterForm } from '/workspace/frontend/src/services/UserServices';
     import { useRouter } from 'vue-router'
 
 
@@ -36,7 +36,7 @@
 
     const handleSubmit = async () => {
         try {
-            const response = await registerUser(form);
+           const response = await UserService.registerUser(form);
             console.log('Inscription réussie:', response.data);
             router.push('/')
         } catch (error: any) {
