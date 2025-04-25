@@ -13,6 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Service\FileHelper;
+
 
 #[Route('/api/vehicules')]
 class VehiculeController extends AbstractController
@@ -58,9 +60,7 @@ class VehiculeController extends AbstractController
 
         $photoPresentation = $request->files->get('photo_presentation');
         if ($photoPresentation) {
-            $originalFilename = pathinfo($photoPresentation->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoPresentation->guessExtension();
+            $newFilename = FileHelper::getHashedFileName($photoPresentation);
 
             $photoPresentation->move($this->getParameter('uploads_directory') . '/vehicules', $newFilename);
             $vehicule->setPhotoPresentation('/uploads/vehicules/' . $newFilename);
@@ -71,9 +71,7 @@ class VehiculeController extends AbstractController
         $photoVehiculesPaths = [];
         if ($photoVehiculeFiles) {
             foreach ($photoVehiculeFiles as $photoFile) {
-                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
+                $newFilename = FileHelper::getHashedFileName($photoFile);
 
                 $photoFile->move($this->getParameter('uploads_directory') . '/vehicules', $newFilename);
                 $photoVehiculesPaths[] = '/uploads/vehicules/' . $newFilename;

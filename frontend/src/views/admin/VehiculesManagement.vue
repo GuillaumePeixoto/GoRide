@@ -6,7 +6,15 @@
             Ajouter un véhicule
             </button>
         </div>
-        <VehiculeForm v-if="showForm" @close="showForm = false" @submit="fetchVehicules" />
+
+        <div class="flex justify-end mb-4 gap-2">
+            <!-- <button @click="viewMode = 'list'" :class="buttonClass('list')">Liste</button>
+            <button @click="viewMode = 'grid'" :class="buttonClass('grid')">Grille</button> -->
+            <button>Liste</button>
+            <button>Grille</button>
+        </div>
+
+        <VehiculeForm v-if="showForm" @close="showForm = false" @submit="handleVehicules" />
 
         <table class="w-full border-collapse">
             <thead>
@@ -30,6 +38,18 @@
                 </tr>
             </tbody>
         </table>
+
+        <!-- Test autre affichage -->
+        <!-- <div style="margin-top: 20px; display: flex;">
+            <img width="150" :src="imageUrl"/>
+            <div style="margin-left: 20px; display: flex; flex-direction: column; justify-content: center; color: white">
+                <p>Mercdes GLE Coupe</p>
+                <p>Type : SUV</p>
+                <p>Kilométrage : 20000 km </p>
+                <p>Agence : Agence test</p>
+            </div>
+        </div> -->
+
     </div>
 </template>
 
@@ -41,8 +61,21 @@ import VehiculeServices from '@/services/VehiculeServices';
 const vehicules = ref([]);
 const showForm = ref(false);
 
+const apiUrl = import.meta.env.VITE_PHP_API_URL;
+const imageUrl = import.meta.env.VITE_PHP_API_URL + "/uploads/vehicules/36d9a166250ee0c04abdc3eda06065da736b33200e0e7dfea5aaad6f6b3ba232.png";
+
 const fetchVehicules = async () => {
-  vehicules.value = await VehiculeServices.getVehicules();
+  try {
+    vehicules.value = await VehiculeServices.getVehicules();
+  } catch (error) {
+    console.error("Erreur lors de la récupération des agences", error);
+  }
+};
+
+const handleVehicules = async (newVehicule: any) => {
+    await VehiculeServices.addVehicule(newVehicule);
+    showForm.value = false;
+    fetchVehicules();
 };
 
 onMounted(fetchVehicules);
