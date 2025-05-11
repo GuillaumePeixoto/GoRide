@@ -4,12 +4,16 @@ import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
 import '@/assets/custom-flatpickr.css'
 import { French } from 'flatpickr/dist/l10n/fr.js'
+import axios from 'axios'
+import AgenceServices from '@/services/AgenceServices';
+import VehiculeServices from '@/services/VehiculeServices';
 
 // Déclaration des données
 const villeSearch = ref('')
 const isUtilityVehicle = ref(false)
 const startDate = ref<string | null>(null)
 const endDate = ref<string | null>(null)
+const villes = ref<string[]>([])
 
 const erreur = ref('');
 
@@ -18,7 +22,14 @@ const startDateInput = ref<HTMLInputElement | null>(null)
 const endDateInput = ref<HTMLInputElement | null>(null)
 
 // Fonction pour initialiser les datepickers
-onMounted(() => {
+onMounted(async () => {
+
+    try {
+        villes.value = await AgenceServices.getDistinctVilles();
+    } catch (error) {
+        console.error("Erreur lors de la récupération des villes", error);
+    }
+
     if (startDateInput.value) {
         flatpickr(startDateInput.value, {
             dateFormat: 'Y-m-d',
@@ -53,13 +64,20 @@ const searchVehicles = () => {
         return;
     }
 
-    console.log("Recherche en cours...")
-    console.log("Date de départ :", startDate.value)
-    console.log("Date d'arrivée :", endDate.value)
-    console.log("Véhicule recherché :", villeSearch.value)
-    console.log("Type de véhicule :", isUtilityVehicle.value ? "Utilitaire" : "Classique")
+    let formValues = {
+        startDate: startDate.value,
+        endDate: endDate.value,
+        ville: villeSearch.value,
+        type: isUtilityVehicle.value ? 1 : 0
+    }
+
+    const listVehicules = VehiculeServices.searchVehicules(formValues);
+    console.log("Liste des véhicules :", listVehicules);
+
 }
 </script>
+
+<!-- TODO : Modifier la zone des filtres et tout mettre sur une seule ligne -->
 
 <template>
     <div class="search-container">
@@ -78,7 +96,11 @@ const searchVehicles = () => {
         </div>
         
         <div class="search-type-city">
-            <input type="text" id="ville-search" v-model="villeSearch" placeholder="Rechercher une ville">
+            <select id="ville-select" class="rounded-md pe-2 text-black" v-model="villeSearch">
+                <option value="" selected>Choisir une ville</option>
+                <option v-for="(ville, index) in villes" :key="index" :value="ville">{{ ville }}</option>
+
+            </select>
 
             <div class="switch-container">
                 <span>Véhicule</span>
@@ -125,6 +147,12 @@ const searchVehicles = () => {
         height: 30px;
         border-radius: 5px;
         font-weight: bold;
+        background-color: rgb(189, 182, 182);
+        border: 2px solid black;
+    }
+
+    .search-button-valid button:hover{
+        background-color: #c49a52;
     }
 
     .search-date-filter{

@@ -7,6 +7,8 @@ use App\Entity\Agence;
 use App\Repository\VehiculeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\AllowAnonymous;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,6 +25,22 @@ class VehiculeController extends AbstractController
     public function list(VehiculeRepository $vehiculeRepository): JsonResponse
     {
         $vehicules = $vehiculeRepository->findAll();
+        return $this->json($vehicules, 200, [], ['groups' => 'vehicule:read']);
+    }
+
+    #[Route('/search', name: 'api_vehicule_search', methods: ['GET'])]
+    #[AllowAnonymous]
+    public function search(Request $request, VehiculeRepository $repo): JsonResponse
+    {
+        $data = $request->query->all();
+
+        $startDate = new \DateTime($data['startDate']);
+        $endDate = new \DateTime($data['endDate']);
+        $ville = $data['ville'];
+        $type = $data['type']; // 'utilitaire' ou 'classique'
+
+        $vehicules = $repo->searchAvailableVehicles($startDate, $endDate, $ville, $type);
+
         return $this->json($vehicules, 200, [], ['groups' => 'vehicule:read']);
     }
 

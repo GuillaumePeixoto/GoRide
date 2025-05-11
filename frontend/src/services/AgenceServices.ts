@@ -28,5 +28,15 @@ export default {
             console.error('Erreur lors de l\'ajout de l\'agence:', error);
             throw error;
         }
+    },
+
+    async getDistinctVilles() {
+        try {
+            const response = await axios.get(`${API_URL}/villes`);
+            return response.data;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des villes distinctes:', error);
+            throw error;
+        }
     }
 };

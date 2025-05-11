@@ -27,4 +27,24 @@ export default {
             throw error;
         }
     },
+
+    async searchVehicules(filters: {
+        startDate: string|null;
+        endDate: string|null;
+        ville: string;
+        type: 0 | 1;
+        }
+    )
+    {
+        try {
+            const response = await axios.get(API_URL+"/search", {
+                params: filters,
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recherche des véhicules:", error);
+            throw error;
+        }
+
+    }
 };

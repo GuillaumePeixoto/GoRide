@@ -16,6 +16,15 @@ class AgenceRepository extends ServiceEntityRepository
         parent::__construct($registry, Agence::class);
     }
 
+    public function findDistinctVilles(): array
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->select('DISTINCT a.ville')
+            ->orderBy('a.ville', 'ASC');
+
+        return array_column($qb->getQuery()->getResult(), 'ville');
+    }
+
     //    /**
     //     * @return Agence[] Returns an array of Agence objects
     //     */

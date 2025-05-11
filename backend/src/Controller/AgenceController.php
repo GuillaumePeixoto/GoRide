@@ -47,4 +47,12 @@
 
             return new JsonResponse(['message' => 'Agence ajoutée avec succès'], Response::HTTP_CREATED);
         }
+
+        #[Route('/villes', name: 'villes', methods: ['GET'])]
+        public function getVilles(AgenceRepository $repo): JsonResponse
+        {
+            $villes = $repo->findDistinctVilles();
+            return $this->json($villes);
+        }
+
     }
