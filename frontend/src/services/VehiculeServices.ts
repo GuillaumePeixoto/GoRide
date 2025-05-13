@@ -31,8 +31,8 @@ export default {
     async searchVehicules(filters: {
         startDate: string|null;
         endDate: string|null;
-        ville: string;
-        type: 0 | 1;
+        ville: string|null;
+        type: number;
         }
     )
     {
