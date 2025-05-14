@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Vehicule;
 use App\Entity\Agence;
 use App\Repository\VehiculeRepository;
+use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -25,22 +26,6 @@ class VehiculeController extends AbstractController
     public function list(VehiculeRepository $vehiculeRepository): JsonResponse
     {
         $vehicules = $vehiculeRepository->findAll();
-        return $this->json($vehicules, 200, [], ['groups' => 'vehicule:read']);
-    }
-
-    #[Route('/search', name: 'api_vehicule_search', methods: ['GET'])]
-    #[AllowAnonymous]
-    public function search(Request $request, VehiculeRepository $repo): JsonResponse
-    {
-        $data = $request->query->all();
-
-        $startDate = new \DateTime($data['startDate']);
-        $endDate = new \DateTime($data['endDate']);
-        $ville = $data['ville'];
-        $type = $data['type']; // 'utilitaire' ou 'classique'
-
-        $vehicules = $repo->searchAvailableVehicles($startDate, $endDate, $ville, $type);
-
         return $this->json($vehicules, 200, [], ['groups' => 'vehicule:read']);
     }
 
@@ -102,5 +87,50 @@ class VehiculeController extends AbstractController
         $em->flush();
 
         return $this->json($vehicule, 201, [], ['groups' => 'vehicule:read']);
+    }
+
+    #[Route('/{id}', name: 'api_vehicule_get', methods: ['GET'])]
+    public function show(Vehicule $vehicule): JsonResponse
+    {
+        return $this->json($vehicule, 200, [], ['groups' => 'vehicule:read']);
+    }
+
+    #[Route('/{id}', name: 'api_vehicule_delete', methods: ['DELETE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function delete(Vehicule $vehicule, ReservationRepository $reservationRepository, EntityManagerInterface $em): JsonResponse
+    {
+        $today = new \DateTime();
+        $futureReservations = $reservationRepository->createQueryBuilder('r')
+            ->where('r.vehicule = :vehicule')
+            ->andWhere('r.date_fin >= :today')
+            ->setParameter('vehicule', $vehicule)
+            ->setParameter('today', $today)
+            ->getQuery()
+            ->getResult();
+
+        if (count($futureReservations) > 0) {
+            return $this->json(['error' => 'Ce véhicule a des réservations en cours ou à venir.'], 400);
+        }
+
+        $em->remove($vehicule);
+        $em->flush();
+
+        return $this->json(['success' => 'Véhicule supprimé.']);
+    }
+
+    #[Route('/search', name: 'api_vehicule_search', methods: ['GET'])]
+    #[AllowAnonymous]
+    public function search(Request $request, VehiculeRepository $repo): JsonResponse
+    {
+        $data = $request->query->all();
+
+        $startDate = new \DateTime($data['startDate']);
+        $endDate = new \DateTime($data['endDate']);
+        $ville = $data['ville'];
+        $type = $data['type']; // 'utilitaire' ou 'classique'
+
+        $vehicules = $repo->searchAvailableVehicles($startDate, $endDate, $ville, $type);
+
+        return $this->json($vehicules, 200, [], ['groups' => 'vehicule:read']);
     }
 }

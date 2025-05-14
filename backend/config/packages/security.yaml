@@ -25,6 +25,8 @@ security:
         - { path: ^/api/agences/villes$, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/vehicules$, roles: ROLE_ADMIN, methods: [POST] }
         - { path: ^/api/vehicules$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/vehicules/\d+$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/vehicules/\d+$, roles: ROLE_ADMIN, methods: [DELETE] }
         - { path: ^/api/vehicules/search, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/users$, roles: ROLE_ADMIN, methods: [GET] }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

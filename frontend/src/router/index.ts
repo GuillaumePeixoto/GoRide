@@ -13,6 +13,7 @@ import AdminDashboard from '@/views/admin/AdminDashboard.vue'
 import ReservationsManagement from '@/views/admin/ReservationsManagement.vue'
 import AgencesManagement from '@/views/admin/AgencesManagement.vue'
 import VehiculesManagement from '@/views/admin/VehiculesManagement.vue'
+import FicheVehicule from '@/views/admin/FicheVehicule.vue'
 import UsersManagement from '@/views/admin/UsersManagement.vue'
 
 // Auth
@@ -38,6 +39,7 @@ const routes = [
       { path: 'reservations', name: 'admin-reservations', component: ReservationsManagement },
       { path: 'agences', name: 'admin-agences', component: AgencesManagement },
       { path: 'vehicules', name: 'admin-vehicules', component: VehiculesManagement },
+      { path: '/vehicule/:id', name: 'fiche-vehicule', component: FicheVehicule, props: true},
       { path: 'users', name: 'admin-users', component: UsersManagement },
     ]
   }

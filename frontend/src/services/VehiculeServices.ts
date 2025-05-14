@@ -28,6 +28,25 @@ export default {
         }
     },
 
+    async getVehicule(id: number) {
+        const response = await axios.get(API_URL+"/"+id)
+        return response.data
+    },
+
+    async deleteVehicule(vehiculeId: number) {
+        try {
+            const response = await axios.post(API_URL, vehiculeId, {
+                headers: {
+                    Authorization: `Bearer ${AuthService.getToken()}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de l'ajout du véhicule:", error);
+            throw error;
+        }
+    },
+
     async searchVehicules(filters: {
         startDate: string;
         endDate: string;

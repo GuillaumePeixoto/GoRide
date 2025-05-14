@@ -34,7 +34,11 @@
                     <td class="py-2 text-center text-white">{{ vehicule.kilometrage }}</td> 
                     <td class="py-2 text-center text-white capitalize-first">{{ vehicule.type_vehicule }}</td>
                     <td class="py-2 text-center text-white capitalize-first">{{ vehicule.agence.nom }}</td>
-                    <td class="py-2 text-center text-white">Fiche / Modif / Delete</td>
+                    <td class="py-2 text-center text-white">
+                        <button @click="voirDetails(vehicule.id)" class="rounded-md bg-sky-500/100 px-2 text-white-600 hover:bg-sky-600 hover:text-white">
+                            Fiche détails
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -55,11 +59,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router'
 import VehiculeForm from '@/components/admin/VehiculeForm.vue';
 import VehiculeServices from '@/services/VehiculeServices';
 
 const vehicules = ref([]);
 const showForm = ref(false);
+const router = useRouter()
 
 const apiUrl = import.meta.env.VITE_PHP_API_URL;
 const imageUrl = import.meta.env.VITE_PHP_API_URL + "/uploads/vehicules/36d9a166250ee0c04abdc3eda06065da736b33200e0e7dfea5aaad6f6b3ba232.png";
@@ -79,6 +85,11 @@ const handleVehicules = async (newVehicule: any) => {
 };
 
 onMounted(fetchVehicules);
+
+const voirDetails = (id: number) => {
+  router.push({ name: 'fiche-vehicule', params: { id } })
+}
+
 </script>
 
 <style scoped>
