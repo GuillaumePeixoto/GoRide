@@ -103,7 +103,7 @@ const handleLogout = () => {
 
     <RouterView />
 
-    <footer class="bg-gray-900 text-gray-300 text-center py-4">
+    <footer class="background-light-black text-gray-300 text-center py-4">
         <p class="mb-2">&copy; 2025 GoRide - Tous droits réservés</p>
         <ul class="flex justify-center space-x-4 text-sm">
         <li><RouterLink class="hover:underline" to="/contact">Contact</RouterLink></li>

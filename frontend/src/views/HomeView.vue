@@ -1,13 +1,19 @@
 <script setup lang="ts">
-
+    import { ref } from 'vue';
     import RechercheVehicule from '../components/RechercheVehicule.vue'
+    import CarPresentationCard from '../components/CarPresentationCard.vue'
     import VehiculeServices from '@/services/VehiculeServices';
 
-    function handleFormSubmit(data: {startDate: string|null; endDate: string|null; ville: string|null; type: number; }) {
-        console.log('Formulaire soumis avec :', data);
-        const listVehicules = VehiculeServices.searchVehicules(data);
-        console.log('Liste des véhicules :', listVehicules);
-        // Tu peux ensuite appeler ton API ici
+    const listVehicules = ref([]);
+
+    const handleFormSubmit = async (data: {startDate: string; endDate: string; ville: string; type: number; }) => {
+        console.log('Données du formulaire :', data);
+        try {
+            listVehicules.value = await VehiculeServices.searchVehicules(data)
+            console.log('Liste des véhicules :', listVehicules)
+        } catch (error) {
+            console.error('Erreur lors de la recherche de véhicules :', error)
+        }
     }
     
 </script>
@@ -16,6 +22,11 @@
     <main>
         <div class="mainDiv" >
             <RechercheVehicule @submit="handleFormSubmit" />
+            
+            <div v-if="listVehicules.length > 0" class="text-center flex flex-wrap justify-center mb-5">
+                <CarPresentationCard v-for="v in listVehicules" :vehicule="v" />
+            </div>
+
         </div>
     </main>
 </template>

@@ -21,74 +21,45 @@ class VehiculeRepository extends ServiceEntityRepository
     function searchAvailableVehicles(\DateTime $startDate, \DateTime $endDate, string $ville, string $type)
     {
 
-        /* 
-            Requete SQL:
-            SELECT v.*
-            FROM vehicule v
-            LEFT JOIN agence a ON v.agence_id = a.id
-            WHERE a.ville = :ville
-            AND v.isUtilitaire = :isUtilitaire
-            AND v.id NOT IN (
-                SELECT r.vehicule_id
-                FROM reservation r
-                WHERE (r.dateDebut <= :endDate AND r.dateFin >= :startDate)
-            )
-            ORDER BY v.id DESC
-        */
+        $qb = $this->createQueryBuilder('v')
+            ->leftJoin('v.agence', 'a');
 
-        $reservedVehicles = $this->getEntityManager()
-            ->getRepository(Reservation::class)
-            ->createQueryBuilder('r')
-            ->select('v.id') // ou juste 'v' selon ce que tu veux
-            ->innerJoin('r.vehicule', 'v')
-            ->where('r.date_debut <= :endDate')
-            ->andWhere('r.date_fin >= :startDate')
-            ->setParameter('startDate', $startDate)
-            ->setParameter('endDate', $endDate)
-            ->getQuery()
-            ->getResult();
-
-
-        $reservedVehicleIds = array_map(fn($item) => $item['vehicule']->getId(), $reservedVehicles);
-        if (empty($reservedVehicleIds)) {
-            $reservedVehicleIds = [0];
+        // Filtrage par ville si fourni
+        if (!empty($ville)) {
+            $qb->andWhere('a.ville = :ville')
+            ->setParameter('ville', $ville);
         }
 
-        // Étape 2 : Requête principale pour les véhicules non réservés
-        $queryBuilder = $this->createQueryBuilder('v')
-            ->leftJoin('v.agence', 'a')
-            ->where('a.ville = :ville')
-            ->andWhere('v.isUtilitaire = :isUtilitaire')
-            ->andWhere('v.id NOT IN (:reservedVehicles)')
-            ->setParameter('ville', $ville)
-            ->setParameter('isUtilitaire', $type)
-            ->setParameter('reservedVehicles', $reservedVehicleIds, Connection::PARAM_INT_ARRAY);
+        // Filtrage par type si fourni
+        if ($type !== null) {
+            $qb->andWhere('v.isUtilitaire = :isUtilitaire')
+            ->setParameter('isUtilitaire', $type);
+        }
 
-        return $queryBuilder->getQuery()->getResult();
+        // Exclure les véhicules réservés si dates fournies
+        if ($startDate !== null && $endDate !== null) {
+            $reservedVehicles = $this->getEntityManager()
+                ->getRepository(Reservation::class)
+                ->createQueryBuilder('r')
+                ->select('IDENTITY(r.vehicule)')
+                ->where('r.date_debut <= :endDate')
+                ->andWhere('r.date_fin >= :startDate')
+                ->setParameter('startDate', $startDate)
+                ->setParameter('endDate', $endDate)
+                ->getQuery()
+                ->getScalarResult();
+
+            $reservedVehicleIds = array_column($reservedVehicles, 1);
+            if (empty($reservedVehicleIds)) {
+                $reservedVehicleIds = [0];
+            }
+
+            $qb->andWhere('v.id NOT IN (:reservedVehicles)')
+            ->setParameter('reservedVehicles', $reservedVehicleIds, Connection::PARAM_INT_ARRAY);
+        }
+
+        return $qb->getQuery()->getResult();
+
     }
 
-    //    /**
-    //     * @return Vehicule[] Returns an array of Vehicule objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('v.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Vehicule
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

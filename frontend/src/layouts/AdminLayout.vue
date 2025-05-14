@@ -92,7 +92,7 @@
 
     <RouterView />
 
-    <footer class="bg-gray-900 text-gray-300 text-center py-4">
+    <footer class="background-light-black text-gray-300 text-center py-4">
         <p class="py-0">&copy; 2025 GoRide - Tous droits réservés</p>
     </footer>
 </template>

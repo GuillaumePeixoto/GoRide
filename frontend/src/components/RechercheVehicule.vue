@@ -6,8 +6,8 @@
     // Déclaration des données
 
     const form = ref({
-        startDate: null,
-        endDate: null,
+        startDate: '',
+        endDate: '',
         ville: '',
         type: 0
     });
@@ -26,22 +26,25 @@
 
 
     const emit = defineEmits<{
-    (e: 'submit', form: { startDate: string|null; endDate: string|null; ville: string|null; type: number; }): void;
+    (e: 'submit', form: { startDate: string; endDate: string; ville: string; type: number; }): void;
     }>();
 
     function handleSubmit() {
+        if(form.value.startDate && form.value.endDate && (form.value.startDate > form.value.endDate)){
+            erreur.value = "Les dates sélectionnées ne sont pas valides";
+            return;
+        }
+        erreur.value = '';
         emit('submit', form.value);
     }
 
 </script>
 
-<!-- TODO : Modifier la zone des filtres et tout mettre sur une seule ligne -->
-
 <template>
+    <div v-if="erreur !== ''" class="message-erreur">
+        {{ erreur }}
+    </div>
     <form @submit.prevent="handleSubmit" class="search-container">
-        <div v-if="erreur" class="message-erreur">
-            {{ erreur }}
-        </div>
 
         <input type="date" class="filterInput" placeholder="Date de départ" v-model="form.startDate">
 
@@ -66,10 +69,12 @@
 
     .search-container input:first-of-type{
         border-radius: 8px 0 0 8px;
+        border-left: 2px solid black;
     }
 
     .search-container > *{
         width: 20%;
+        border: 2px solid black;
     }
 
     /* Container principal */
@@ -94,12 +99,16 @@
     #filterButton{
         border-radius: 0px 8px 8px 0px;
         font-weight: bold;
-        background-color: rgb(189, 182, 182);
+        background-color: #3f3b3b;
+        color: rgb(214, 214, 214);
+        border-right: 2px solid black;
+        border-left: 2px solid black;
         transition: background-color 0.4s ease;
     }
 
     #filterButton:hover{
         background-color: #c49a52;
+        color: black;
     }
 
     .filterInput {
