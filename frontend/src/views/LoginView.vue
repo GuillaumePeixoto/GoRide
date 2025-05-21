@@ -1,6 +1,6 @@
 <template>
-    <main class='background-light-black-opacity sm:w-3/4 md:w-2/3 lg:w-2/4 xl:w-1/4"'>
-        <div class="p-4 max-w-md mx-auto">
+    <main>
+        <div class="background-light-black-opacity rounded p-4 max-w-md mx-auto">
             <h1 class="text-xl mb-4">Connexion</h1>
             <form @submit.prevent="handleLogin">
                 <input v-model="email" placeholder="Email" class="input" />
