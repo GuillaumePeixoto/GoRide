@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+    min-height: 100vh;
+}
 
 /* -------------------- HEADER / FOOTER -------------------- */
 
@@ -50,7 +53,6 @@ footer{
     width: 100%;
     padding: 25px 0px;
     display: block;
-    position: absolute;
     bottom: 0;
 }
 

@@ -10,9 +10,13 @@ main{
 }
 
 #app{
-    display: block; /* Ou inline-block si besoin */
-    width: 100%;
-    height: 100%;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+#app > main{
+    flex: 1;
 }
 
 .gold-font-color{

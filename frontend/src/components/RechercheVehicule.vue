@@ -45,7 +45,7 @@
         {{ erreur }}
     </div>
     <form @submit.prevent="handleSubmit" class="search-container">
-
+        
         <input type="date" class="filterInput" placeholder="Date de départ" v-model="form.startDate">
 
         <input type="date" class="filterInput" placeholder="Date d'arrivée"  v-model="form.endDate">

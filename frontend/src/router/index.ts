@@ -13,36 +13,38 @@ import AdminDashboard from '@/views/admin/AdminDashboard.vue'
 import ReservationsManagement from '@/views/admin/ReservationsManagement.vue'
 import AgencesManagement from '@/views/admin/AgencesManagement.vue'
 import VehiculesManagement from '@/views/admin/VehiculesManagement.vue'
-import FicheVehicule from '@/views/admin/FicheVehicule.vue'
+import VehiculeFiche from '@/views/admin/VehiculeFiche.vue'
+import VehiculeEdit from '@/views/admin/VehiculeEdit.vue'
 import UsersManagement from '@/views/admin/UsersManagement.vue'
 
 // Auth
 import AuthService from '@/services/AuthService'
 
 const routes = [
-  {
-    path: '/',
-    component: PublicLayout,
-    children: [
-      { path: '', name: 'home', component: HomeView },
-      { path: 'about', name: 'about', component: AboutView },
-      { path: 'inscription', name: 'inscription', component: InscriptionView },
-      { path: 'connexion', name: 'login', component: LoginView }
-    ]
-  },
-  {
-    path: '/admin',
-    component: AdminLayout,
-    meta: { requiresAuth: true, requiresAdmin: true },
-    children: [
-      { path: 'dashboard', name: 'admin-dashboard', component: AdminDashboard },
-      { path: 'reservations', name: 'admin-reservations', component: ReservationsManagement },
-      { path: 'agences', name: 'admin-agences', component: AgencesManagement },
-      { path: 'vehicules', name: 'admin-vehicules', component: VehiculesManagement },
-      { path: '/vehicule/:id', name: 'fiche-vehicule', component: FicheVehicule, props: true},
-      { path: 'users', name: 'admin-users', component: UsersManagement },
-    ]
-  }
+    {
+        path: '/',
+        component: PublicLayout,
+        children: [
+            { path: '', name: 'home', component: HomeView },
+            { path: 'about', name: 'about', component: AboutView },
+            { path: 'inscription', name: 'inscription', component: InscriptionView },
+            { path: 'connexion', name: 'login', component: LoginView }
+        ]
+    },
+    {
+        path: '/admin',
+        component: AdminLayout,
+        meta: { requiresAuth: true, requiresAdmin: true },
+        children: [
+            { path: 'dashboard', name: 'admin-dashboard', component: AdminDashboard },
+            { path: 'reservations', name: 'admin-reservations', component: ReservationsManagement },
+            { path: 'agences', name: 'admin-agences', component: AgencesManagement },
+            { path: 'vehicule/:id', name: 'fiche-vehicule', component: VehiculeFiche, props: true},
+            { path: 'vehicules', name: 'admin-vehicules', component: VehiculesManagement },
+            { path: 'vehicules/:id/edit', name: 'vehicule-edit', component: VehiculeEdit, props: true},
+            { path: 'users', name: 'admin-users', component: UsersManagement },
+        ]
+    }
 ]
 
 const router = createRouter({

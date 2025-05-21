@@ -26,7 +26,7 @@ const apiUrl = import.meta.env.VITE_PHP_API_URL;
                 v-if="vehicule.photo_presentation"
                 :src="apiUrl+'/'+vehicule.photo_presentation"
                 alt="photo véhicule"
-                class="h-44 max-w-32 object-cover rounded mb-4 mx-auto"
+                class="h-40 max-w-28 object-cover rounded mb-4 mx-auto"
             />
             <div class="contentInfos gold-font-color">
                 <div class="text-lg font-bold mb-1">{{ vehicule.marque }} {{ vehicule.modele }}</div>
@@ -71,7 +71,7 @@ const apiUrl = import.meta.env.VITE_PHP_API_URL;
         height: 100%;
         background: #c49a52;
         transform: skewY(345deg);
-        transition: 0.5s;
+        transition: 0.7s;
     }
 
     .card:hover::before{
@@ -95,6 +95,14 @@ const apiUrl = import.meta.env.VITE_PHP_API_URL;
         z-index: 1;
     }
 
+    .card .imgCar img{
+        transition: 0.7s;
+    }
+
+    .card:hover .imgCar img{
+        transform: scale(1.1);
+    }
+
     .card .contentInfos{
         position: relative;
         width: 100%;
@@ -104,7 +112,7 @@ const apiUrl = import.meta.env.VITE_PHP_API_URL;
         flex-direction: column;
         z-index: 1;
         transform: translateY(70px);
-        transition: transform 1s ease;
+        transition: transform 0.7s ease;
     }
 
     .card:hover .contentInfos{
@@ -116,7 +124,7 @@ const apiUrl = import.meta.env.VITE_PHP_API_URL;
 
     .card .contentInfosHide{
         opacity: 0;
-        transition: opacity 1s ease;
+        transition: opacity 0.7s ease;
     }
 
     .card:hover .contentInfosHide{

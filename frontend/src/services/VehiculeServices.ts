@@ -1,12 +1,12 @@
 import axios from "axios";
 import AuthService from "@/services/AuthService";
 
-const API_URL = "http://localhost:8000/api/vehicules";
+const API_URL = "http://localhost:8000/api";
 
 export default {
     async getVehicules() {
         try {
-            const response = await axios.get(API_URL);
+            const response = await axios.get(API_URL+"/vehicules");
             return response.data;
         } catch (error) {
             console.error("Erreur lors de la récupération des véhicules:", error);
@@ -16,7 +16,7 @@ export default {
 
     async addVehicule(vehiculeData: any) {
         try {
-            const response = await axios.post(API_URL, vehiculeData, {
+            const response = await axios.post(API_URL+"/vehicules", vehiculeData, {
                 headers: {
                     Authorization: `Bearer ${AuthService.getToken()}`,
                 },
@@ -29,13 +29,22 @@ export default {
     },
 
     async getVehicule(id: number) {
-        const response = await axios.get(API_URL+"/"+id)
+        const response = await axios.get(API_URL+"/vehicule/"+id)
         return response.data
+    },
+
+    async updateVehicule(id: number, formData: FormData) {
+        return axios.post(API_URL+'/vehicule/'+id+'/edit', formData, {
+            headers: { 
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${AuthService.getToken()}`,
+            },
+        });
     },
 
     async deleteVehicule(vehiculeId: number) {
         try {
-            const response = await axios.post(API_URL, vehiculeId, {
+            const response = await axios.delete(API_URL+"/vehicule/"+vehiculeId, {
                 headers: {
                     Authorization: `Bearer ${AuthService.getToken()}`,
                 },
@@ -47,16 +56,9 @@ export default {
         }
     },
 
-    async searchVehicules(filters: {
-        startDate: string;
-        endDate: string;
-        ville: string;
-        type: number;
-        }
-    )
-    {
+    async searchVehicules(filters: { startDate: string; endDate: string; ville: string; type: number; }){
         try {
-            const response = await axios.get(API_URL+"/search", {
+            const response = await axios.get(API_URL+"/vehicules/search", {
                 params: filters,
             });
             return response.data;

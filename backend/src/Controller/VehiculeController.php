@@ -13,23 +13,23 @@ use Symfony\Component\Security\Http\Attribute\AllowAnonymous;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\FileHelper;
 
 
-#[Route('/api/vehicules')]
 class VehiculeController extends AbstractController
 {
-    #[Route('', methods: ['GET'])]
+    #[Route('/api/vehicules', methods: ['GET'])]
     public function list(VehiculeRepository $vehiculeRepository): JsonResponse
     {
         $vehicules = $vehiculeRepository->findAll();
         return $this->json($vehicules, 200, [], ['groups' => 'vehicule:read']);
     }
 
-    #[Route('', methods: ['POST'])]
+    #[Route('/api/vehicules', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function add(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): JsonResponse
     {
@@ -46,8 +46,9 @@ class VehiculeController extends AbstractController
         $vehicule->setPresentationVehicule($data['presentation_vehicule'] ?? null);
         $vehicule->setRemarque($data['remarque'] ?? null);
         $vehicule->setPhotoVehicule([]);
+
         if($data['isUtilitaire']){
-            $vehicule->setTypeVehicule('utilitaire');
+            $vehicule->setTypeVehicule('Utilitaire');
             $vehicule->setIsUtilitaire(1);
         } else {
             $vehicule->setTypeVehicule($data['type_vehicule'] ?? '');
@@ -89,13 +90,67 @@ class VehiculeController extends AbstractController
         return $this->json($vehicule, 201, [], ['groups' => 'vehicule:read']);
     }
 
-    #[Route('/{id}', name: 'api_vehicule_get', methods: ['GET'])]
+    #[Route('/api/vehicule/{id}', name: 'api_vehicule_get', methods: ['GET'])]
     public function show(Vehicule $vehicule): JsonResponse
     {
         return $this->json($vehicule, 200, [], ['groups' => 'vehicule:read']);
     }
 
-    #[Route('/{id}', name: 'api_vehicule_delete', methods: ['DELETE'])]
+    #[Route('/api/vehicule/{id}/edit', name: 'api_vehicule_update', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function edit(Request $request, Vehicule $vehicule, EntityManagerInterface $em, SluggerInterface $slugger): JsonResponse
+    {
+        $data = $request->request->all();
+
+        $vehicule->setMarque($data['marque']);
+        $vehicule->setModele($data['modele']);
+        $vehicule->setNbPorte($data['nb_porte']);
+        $vehicule->setCouleur($data['couleur']);
+        $vehicule->setKilometrage($data['kilometrage']);
+        $vehicule->setPresentationVehicule($data['presentation_vehicule'] ?? null);
+        $vehicule->setRemarque($data['remarque'] ?? null);
+        
+        if ($data['isUtilitaire'] && $data['isUtilitaire'] == 1) {
+            $vehicule->setTypeVehicule('Utilitaire');
+            $vehicule->setIsUtilitaire(1);
+        } else {
+            $vehicule->setTypeVehicule($data['type_vehicule'] ?? '');
+            $vehicule->setIsUtilitaire(0);
+        }
+
+        $agence = $em->getRepository(Agence::class)->find($data['agence']);
+        if (!$agence) {
+            return $this->json(['message' => 'Agence non trouvée'], 404);
+        }
+        $vehicule->setAgence($agence);
+
+        // Si une nouvelle photo de présentation est envoyée
+        $photoPresentation = $request->files->get('photo_presentation');
+        if ($photoPresentation) {
+            $newFilename = FileHelper::getHashedFileName($photoPresentation);
+            $photoPresentation->move($this->getParameter('uploads_directory') . '/vehicules', $newFilename);
+            $vehicule->setPhotoPresentation('/uploads/vehicules/' . $newFilename);
+        }
+
+        // Si de nouvelles photos de véhicules sont envoyées
+        $photoVehiculeFiles = $request->files->all('photo_vehicule');
+        if ($photoVehiculeFiles) {
+            $photoVehiculesPaths = [];
+            foreach ($photoVehiculeFiles as $photoFile) {
+                $newFilename = FileHelper::getHashedFileName($photoFile);
+                $photoFile->move($this->getParameter('uploads_directory') . '/vehicules', $newFilename);
+                $photoVehiculesPaths[] = '/uploads/vehicules/' . $newFilename;
+            }
+            // Tu peux aussi décider de fusionner ou d’écraser ici
+            $vehicule->setPhotoVehicule($photoVehiculesPaths);
+        }
+
+        $em->flush();
+
+        return $this->json($vehicule, 200, [], ['groups' => 'vehicule:read']);
+    }
+
+    #[Route('/api/vehicule/{id}', name: 'api_vehicule_delete', methods: ['DELETE'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Vehicule $vehicule, ReservationRepository $reservationRepository, EntityManagerInterface $em): JsonResponse
     {
@@ -118,7 +173,7 @@ class VehiculeController extends AbstractController
         return $this->json(['success' => 'Véhicule supprimé.']);
     }
 
-    #[Route('/search', name: 'api_vehicule_search', methods: ['GET'])]
+    #[Route('/api/vehicules/search', name: 'api_vehicule_search', methods: ['GET'])]
     #[AllowAnonymous]
     public function search(Request $request, VehiculeRepository $repo): JsonResponse
     {
