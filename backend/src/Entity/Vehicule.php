@@ -55,12 +55,6 @@ class Vehicule
     private ?array $photo_vehicule = null;
 
     /**
-     * @var Collection<int, Tarification>
-     */
-    #[ORM\OneToMany(targetEntity: Tarification::class, mappedBy: 'vehicule', orphanRemoval: true)]
-    private Collection $tarifications;
-
-    /**
      * @var Collection<int, Reservation>
      */
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'vehicule')]
@@ -78,9 +72,20 @@ class Vehicule
     #[Groups(['vehicule:read'])]
     private ?bool $isUtilitaire = null;
 
+    #[ORM\Column(length: 100)]
+    #[Groups(['vehicule:read'])]
+    private ?string $typeCarburant = null;
+
+    #[ORM\Column(length: 100)]
+    #[Groups(['vehicule:read'])]
+    private ?string $boiteDeVitesse = null;
+
+    #[ORM\Column]
+    #[Groups(['vehicule:read'])]
+    private ?float $prixJour = null;
+
     public function __construct()
     {
-        $this->tarifications = new ArrayCollection();
         $this->reservations = new ArrayCollection();
     }
 
@@ -198,36 +203,6 @@ class Vehicule
     }
 
     /**
-     * @return Collection<int, Tarification>
-     */
-    public function getTarifications(): Collection
-    {
-        return $this->tarifications;
-    }
-
-    public function addTarification(Tarification $tarification): static
-    {
-        if (!$this->tarifications->contains($tarification)) {
-            $this->tarifications->add($tarification);
-            $tarification->setVehicule($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTarification(Tarification $tarification): static
-    {
-        if ($this->tarifications->removeElement($tarification)) {
-            // set the owning side to null (unless already changed)
-            if ($tarification->getVehicule() === $this) {
-                $tarification->setVehicule(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Reservation>
      */
     public function getReservations(): Collection
@@ -289,6 +264,42 @@ class Vehicule
     public function setIsUtilitaire(bool $isUtilitaire): static
     {
         $this->isUtilitaire = $isUtilitaire;
+
+        return $this;
+    }
+
+    public function getTypeCarburant(): ?string
+    {
+        return $this->typeCarburant;
+    }
+
+    public function setTypeCarburant(string $typeCarburant): static
+    {
+        $this->typeCarburant = $typeCarburant;
+
+        return $this;
+    }
+
+    public function getBoiteDeVitesse(): ?string
+    {
+        return $this->boiteDeVitesse;
+    }
+
+    public function setBoiteDeVitesse(string $boiteDeVitesse): static
+    {
+        $this->boiteDeVitesse = $boiteDeVitesse;
+
+        return $this;
+    }
+
+    public function getPrixJour(): ?float
+    {
+        return $this->prixJour;
+    }
+
+    public function setPrixJour(float $prixJour): static
+    {
+        $this->prixJour = $prixJour;
 
         return $this;
     }

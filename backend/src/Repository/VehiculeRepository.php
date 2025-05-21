@@ -31,13 +31,13 @@ class VehiculeRepository extends ServiceEntityRepository
         }
 
         // Filtrage par type si fourni
-        if ($type !== null) {
+        if (!empty($type)) {
             $qb->andWhere('v.isUtilitaire = :isUtilitaire')
             ->setParameter('isUtilitaire', $type);
         }
 
         // Exclure les véhicules réservés si dates fournies
-        if ($startDate !== null && $endDate !== null) {
+        if (!empty($startDate) && !empty($endDate)) {
             $reservedVehicles = $this->getEntityManager()
                 ->getRepository(Reservation::class)
                 ->createQueryBuilder('r')
