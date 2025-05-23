@@ -39,7 +39,7 @@
                         <td class="py-2 text-center text-white capitalize-first">{{ vehicule.type_vehicule }}</td>
                         <td class="py-2 text-center text-white capitalize-first">{{ vehicule.agence.nom }}</td>
                         <td class="py-2 text-center text-white">
-                            <button @click="voirDetails(vehicule.id)" class="rounded-md bg-sky-500/100 px-2 text-white-600 hover:bg-sky-600 hover:text-white">
+                            <button @click="voirDetails(vehicule.id)" class="rounded-md bg-sky-500/100 px-2 text-white-600 hover:bg-sky-600 hover:text-white cursor-pointer">
                                 Fiche détails
                             </button>
                         </td>

@@ -12,11 +12,13 @@
                 
                 <!-- Caractéristiques -->
                 <h3 class="text-xl font-semibold mt-4">Caractéristiques</h3>
-                <ul class="list-disc pl-5 text-gray-600 mt-2" id="caracteristiques">
-                    <li>Type : <span>{{ vehicule.type_vehicule }}</span></li>
-                    <li>Couleur : <span>{{ vehicule.couleur }}</span></li>
-                    <li>Kilométrage : <span>{{ vehicule.kilometrage }} km </span></li>
-                    <li>Places : <span>{{ vehicule.nb_porte }}</span></li>
+                <ul class="list-none pl-5 text-gray-600 mt-2" id="caracteristiques">
+                    <li><strong>Type :</strong> <span>{{ vehicule.type_vehicule }}</span></li>
+                    <li><strong>Type de carburant :</strong> <span>{{ vehicule.typeCarburant }}</span></li>
+                    <li><strong>Boite de vitesse :</strong> <span>{{ vehicule.boiteDeVitesse }}</span></li>
+                    <li><strong>Couleur :</strong> <span>{{ vehicule.couleur }}</span></li>
+                    <li><strong>Kilométrage :</strong> <span>{{ vehicule.kilometrage }} km </span></li>
+                    <li><strong>Places :</strong> <span>{{ vehicule.nb_porte }}</span></li>
                 </ul>
 
                 <!-- Prix -->

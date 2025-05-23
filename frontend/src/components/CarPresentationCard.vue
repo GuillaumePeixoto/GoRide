@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import VehiculeEdit from '@/views/admin/VehiculeEdit.vue';
+
 defineProps<{
   vehicule: {
     marque: string
@@ -26,10 +28,13 @@ const apiUrl = import.meta.env.VITE_PHP_API_URL;
                 v-if="vehicule.photo_presentation"
                 :src="apiUrl+'/'+vehicule.photo_presentation"
                 alt="photo véhicule"
-                class="h-40 max-w-28 object-cover rounded mb-4 mx-auto"
+                class="h-40 max-w-60 object-cover rounded mb-4 mx-auto"
             />
             <div class="contentInfos gold-font-color">
-                <div class="text-lg font-bold mb-1">{{ vehicule.marque }} {{ vehicule.modele }}</div>
+                <div class="text-lg font-bold mb-1">
+                    <p>{{ vehicule.marque }} {{ vehicule.modele }}</p>
+                    <p class="text-base font-normal">A partir de {{ vehicule.prixJour }}€/jour</p>
+                </div>
                 <div class="contentInfosHide">
                     <p class="mt-2 text-sm"><strong>Couleur:</strong> {{ vehicule.couleur }}</p>
                     <p class="text-sm"><strong>Kilométrage:</strong> {{ vehicule.kilometrage }} km</p>

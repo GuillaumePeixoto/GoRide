@@ -22,7 +22,8 @@ class VehiculeRepository extends ServiceEntityRepository
     {
 
         $qb = $this->createQueryBuilder('v')
-            ->leftJoin('v.agence', 'a');
+            ->leftJoin('v.agence', 'a')
+            ->where('v.prixJour > 0');
 
         // Filtrage par ville si fourni
         if (!empty($ville)) {

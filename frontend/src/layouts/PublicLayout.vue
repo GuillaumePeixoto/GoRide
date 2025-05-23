@@ -57,12 +57,12 @@ const handleLogout = () => {
 
                 <!-- Icône notifications + profil -->
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                    <Menu v-if="!isAuthenticated" as="div" class="relative ml-3">
+                    <Menu v-if="!isAuthenticated" as="div" class="hidden sm:block relative ml-3">
                         <RouterLink v-slot="{ isActive }" v-for="item in navigation" :key="item.name" :to="item.href" class='rounded-md px-3 py-2 text-sm font-medium' :aria-current="item.current ? 'page' : undefined">
                             <span :class="[ isActive ? 'backgound-gold text-white' : 'text-gray-300', 'px-3 py-2 rounded-md']" >{{ item.name }} </span>
                         </RouterLink>
                     </Menu>
-                    <Menu v-if="isAuthenticated" as="div" class="relative ml-3">
+                    <Menu v-if="isAuthenticated" as="div" class="hidden sm:block relative ml-3">
                         <div>
                             <MenuButton class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                 <span class="sr-only">Open user menu</span>
@@ -97,6 +97,17 @@ const handleLogout = () => {
                         {{ item.name }}
                     </RouterLink>
                 </DisclosureButton>
+                <template v-if="isAuthenticated">
+                    <RouterLink to="/profile" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                        Profil
+                    </RouterLink>
+                    <RouterLink v-if="isAdmin" to="/admin/dashboard" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                        Admin
+                    </RouterLink>
+                    <button @click="handleLogout" class="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                        Déconnexion
+                    </button>
+                </template>
             </div>
         </DisclosurePanel>
     </Disclosure>
@@ -104,7 +115,7 @@ const handleLogout = () => {
     <RouterView />
 
     <footer class="background-light-black text-gray-300 text-center py-4">
-        <p class="mb-2">&copy; 2025 GoRide - Tous droits réservés</p>
+        <p class="mb-4">&copy; 2025 GoRide - Tous droits réservés</p>
         <ul class="flex justify-center space-x-4 text-sm">
         <li><RouterLink class="hover:underline" to="/contact">Contact</RouterLink></li>
         <li><RouterLink class="hover:underline" to="/terms">Conditions d'utilisation</RouterLink></li>

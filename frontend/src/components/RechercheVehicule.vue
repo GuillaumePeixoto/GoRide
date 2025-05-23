@@ -75,6 +75,7 @@
     .search-container > *{
         width: 20%;
         border: 2px solid black;
+        background-color: white;
     }
 
     /* Container principal */

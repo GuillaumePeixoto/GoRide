@@ -124,8 +124,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router'
 import AgenceServices from '@/services/AgenceServices';
 import VehiculeServices from '@/services/VehiculeServices';
+
+const router = useRouter();
 
 const props = defineProps({
   vehiculeInitial: Object
@@ -226,9 +229,11 @@ const handleSubmit = async () => {
         if (props.vehiculeInitial && props.vehiculeInitial.id) {
             await VehiculeServices.updateVehicule(props.vehiculeInitial.id, formData);
             alert("Véhicule modifié avec succès");
+            router.push('/admin/vehicule/'+props.vehiculeInitial.id) // ou retour vers fiche détail
         } else {
             await VehiculeServices.addVehicule(formData);
             alert("Véhicule ajouté avec succès");
+            router.push('/admin/vehicules') // ou retour vers fiche détail
         }
         // emit("refresh"); // ⚠️ Vue 3 : il faut déclarer `const emit = defineEmits(["refresh"]);` en haut du `<script setup>`
     } catch (error) {
