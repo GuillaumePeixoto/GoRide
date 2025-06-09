@@ -28,7 +28,7 @@ class Vehicule
 
     #[ORM\Column]
     #[Groups(['vehicule:read'])]
-    private ?int $nb_porte = null;
+    private ?int $nbPorte = null;
 
     #[ORM\Column(length: 100)]
     #[Groups(['vehicule:read'])]
@@ -36,7 +36,7 @@ class Vehicule
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['vehicule:read'])]
-    private ?string $photo_presentation = null;
+    private ?string $photoPresentation = null;
 
     #[ORM\Column]
     #[Groups(['vehicule:read'])]
@@ -44,7 +44,7 @@ class Vehicule
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['vehicule:read'])]
-    private ?string $presentation_vehicule = null;
+    private ?string $presentationVehicule = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['vehicule:read'])]
@@ -52,7 +52,7 @@ class Vehicule
 
     #[ORM\Column(nullable: true)]
     #[Groups(['vehicule:read'])]
-    private ?array $photo_vehicule = null;
+    private ?array $photoVehicule = null;
 
     /**
      * @var Collection<int, Reservation>
@@ -66,7 +66,7 @@ class Vehicule
 
     #[ORM\Column(length: 255)]
     #[Groups(['vehicule:read'])]
-    private ?string $type_vehicule = null;
+    private ?string $typeVehicule = null;
 
     #[ORM\Column]
     #[Groups(['vehicule:read'])]
@@ -120,12 +120,12 @@ class Vehicule
 
     public function getNbPorte(): ?int
     {
-        return $this->nb_porte;
+        return $this->nbPorte;
     }
 
-    public function setNbPorte(int $nb_porte): static
+    public function setNbPorte(int $nbPorte): static
     {
-        $this->nb_porte = $nb_porte;
+        $this->nbPorte = $nbPorte;
 
         return $this;
     }
@@ -144,12 +144,12 @@ class Vehicule
 
     public function getPhotoPresentation(): ?string
     {
-        return $this->photo_presentation;
+        return $this->photoPresentation;
     }
 
-    public function setPhotoPresentation(?string $photo_presentation): static
+    public function setPhotoPresentation(?string $photoPresentation): static
     {
-        $this->photo_presentation = $photo_presentation;
+        $this->photoPresentation = $photoPresentation;
 
         return $this;
     }
@@ -168,12 +168,12 @@ class Vehicule
 
     public function getPresentationVehicule(): ?string
     {
-        return $this->presentation_vehicule;
+        return $this->presentationVehicule;
     }
 
-    public function setPresentationVehicule(string $presentation_vehicule): static
+    public function setPresentationVehicule(string $presentationVehicule): static
     {
-        $this->presentation_vehicule = $presentation_vehicule;
+        $this->presentationVehicule = $presentationVehicule;
 
         return $this;
     }
@@ -192,12 +192,12 @@ class Vehicule
 
     public function getPhotoVehicule(): ?array
     {
-        return $this->photo_vehicule;
+        return $this->photoVehicule;
     }
 
-    public function setPhotoVehicule(?array $photo_vehicule): static
+    public function setPhotoVehicule(?array $photoVehicule): static
     {
-        $this->photo_vehicule = $photo_vehicule;
+        $this->photoVehicule = $photoVehicule;
 
         return $this;
     }
@@ -246,12 +246,12 @@ class Vehicule
 
     public function getTypeVehicule(): ?string
     {
-        return $this->type_vehicule;
+        return $this->typeVehicule;
     }
 
-    public function setTypeVehicule(string $type_vehicule): static
+    public function setTypeVehicule(string $typeVehicule): static
     {
-        $this->type_vehicule = $type_vehicule;
+        $this->typeVehicule = $typeVehicule;
 
         return $this;
     }

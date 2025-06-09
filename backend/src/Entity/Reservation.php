@@ -34,6 +34,12 @@ class Reservation
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $remarque = null;
 
+    #[ORM\Column]
+    private array $detailReservation = [];
+
+    #[ORM\Column]
+    private ?float $prixTotal = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -107,6 +113,30 @@ class Reservation
     public function setRemarque(?string $remarque): static
     {
         $this->remarque = $remarque;
+
+        return $this;
+    }
+
+    public function getDetailReservation(): array
+    {
+        return $this->detailReservation;
+    }
+
+    public function setDetailReservation(array $detailReservation): static
+    {
+        $this->detailReservation = $detailReservation;
+
+        return $this;
+    }
+
+    public function getPrixTotal(): ?float
+    {
+        return $this->prixTotal;
+    }
+
+    public function setPrixTotal(float $prixTotal): static
+    {
+        $this->prixTotal = $prixTotal;
 
         return $this;
     }

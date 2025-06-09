@@ -19,14 +19,14 @@
             </div>
 
             <div class="input-group my-6 md:my-8">
-                <textarea v-model="vehicule.presentation_vehicule" id="presentationVehicule" placeholder=" " class="input-field"></textarea>
+                <textarea v-model="vehicule.presentationVehicule" id="presentationVehicule" placeholder=" " class="input-field"></textarea>
                 <label for="presentationVehicule">Présentation Véhicule</label>
             </div>
 
             <div class="flex-fields my-6 md:my-8">
 
                 <div class="input-group my-2 md:my-0">
-                    <input v-model.number="vehicule.nb_porte" id="nbPorte" type="number" placeholder=" " required class="input-field" />
+                    <input v-model.number="vehicule.nbPorte" id="nbPorte" type="number" placeholder=" " required class="input-field" />
                     <label for="nbPorte">Nombre de portes</label>
                 </div>
 
@@ -65,7 +65,7 @@
                 </div>
 
                 <div class="input-group my-2 md:my-0">
-                    <select v-model="vehicule.type_vehicule" id="typeVehicule" required class="input-field">
+                    <select v-model="vehicule.typeVehicule" id="typeVehicule" required class="input-field">
                         <option disabled value="">Sélectionner un type de Véhicule</option>
                         <option value="Berline">Berline</option>
                         <option value="Coupe">Coupé</option>
@@ -155,17 +155,17 @@ const handlePhotoVehiculeUpload = (event: Event) => {
 const vehicule = ref({
     marque: '',
     modele: '',
-    nb_porte: 5,
+    nbPorte: 5,
     couleur: '',
-    photo_presentation: null,
+    photoPresentation: null,
     kilometrage: 0,
     typeCarburant: '',
     boiteDeVitesse: '',
-    presentation_vehicule: '',
+    presentationVehicule: '',
     remarque: '',
-    photo_vehicule: [],
+    photoVehicule: [],
     agence: '',
-    type_vehicule: '',
+    typeVehicule: '',
     isUtilitaire: 0,
     prixJour: 0,
 });
@@ -173,15 +173,15 @@ const vehicule = ref({
 if (props.vehiculeInitial) {
     vehicule.value.marque = props.vehiculeInitial.marque;
     vehicule.value.modele = props.vehiculeInitial.modele;
-    vehicule.value.nb_porte = props.vehiculeInitial.nb_porte;
+    vehicule.value.nbPorte = props.vehiculeInitial.nbPorte;
     vehicule.value.couleur = props.vehiculeInitial.couleur;
     vehicule.value.kilometrage = props.vehiculeInitial.kilometrage;
     vehicule.value.typeCarburant = props.vehiculeInitial.typeCarburant;
     vehicule.value.boiteDeVitesse = props.vehiculeInitial.boiteDeVitesse;
-    vehicule.value.presentation_vehicule = props.vehiculeInitial.presentation_vehicule;
+    vehicule.value.presentationVehicule = props.vehiculeInitial.presentationVehicule;
     vehicule.value.remarque = props.vehiculeInitial.remarque;
     vehicule.value.agence = props.vehiculeInitial.agence?.id ?? '';
-    vehicule.value.type_vehicule = props.vehiculeInitial.type_vehicule;
+    vehicule.value.typeVehicule = props.vehiculeInitial.typeVehicule;
     vehicule.value.isUtilitaire = props.vehiculeInitial.isUtilitaire;
     vehicule.value.prixJour = props.vehiculeInitial.prixJour;
     buttonText = 'Modifier';
@@ -203,26 +203,26 @@ const handleSubmit = async () => {
         
         formData.append("marque", vehicule.value.marque);
         formData.append("modele", vehicule.value.modele);
-        formData.append("nb_porte", vehicule.value.nb_porte.toString());
+        formData.append("nbPorte", vehicule.value.nbPorte.toString());
         formData.append("couleur", vehicule.value.couleur);
         formData.append("kilometrage", vehicule.value.kilometrage.toString());
         formData.append("typeCarburant", vehicule.value.typeCarburant.toString());
         formData.append("boiteDeVitesse", vehicule.value.boiteDeVitesse.toString());
-        formData.append("presentation_vehicule", vehicule.value.presentation_vehicule || "");
+        formData.append("presentationVehicule", vehicule.value.presentationVehicule || "");
         formData.append("remarque", vehicule.value.remarque || "");
         formData.append("agence", vehicule.value.agence);
-        formData.append("type_vehicule", vehicule.value.type_vehicule);
+        formData.append("typeVehicule", vehicule.value.typeVehicule);
         formData.append("isUtilitaire", vehicule.value.isUtilitaire ? "1" : "0");
         formData.append("prixJour", vehicule.value.prixJour.toString());
 
         // Gestion des fichiers
         if (photoPresentation.value) {
-            formData.append("photo_presentation", photoPresentation.value);
+            formData.append("photoPresentation", photoPresentation.value);
         }
 
         if (photoVehicule.value.length) {
             photoVehicule.value.forEach((file) => {
-                formData.append('photo_vehicule[]', file);
+                formData.append('photoVehicule[]', file);
             });
         }
 

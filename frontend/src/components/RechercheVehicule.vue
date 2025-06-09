@@ -24,6 +24,18 @@
         }
     })
 
+    const storedStart = localStorage.getItem('startDateFilter');
+    const storedEnd = localStorage.getItem('endDateFilter');
+
+    console.log(storedStart, storedEnd);
+
+    if (storedStart && storedStart !== '') {
+        form.value.startDate = storedStart;
+    }
+    if (storedEnd && storedEnd !== '') {
+        form.value.endDate = storedEnd
+    }
+
 
     const emit = defineEmits<{
     (e: 'submit', form: { startDate: string; endDate: string; ville: string; type: number; }): void;
@@ -34,6 +46,10 @@
             erreur.value = "Les dates sélectionnées ne sont pas valides";
             return;
         }
+        localStorage.setItem('startDateFilter', form.value.startDate);
+        localStorage.setItem('endDateFilter', form.value.endDate);
+        localStorage.setItem('villeFilter', form.value.ville);
+        localStorage.setItem('typeFilter', form.value.type.toString());
         erreur.value = '';
         emit('submit', form.value);
     }

@@ -1,13 +1,27 @@
 <script setup lang="ts">
     import { ref } from 'vue';
+    import { useRouter } from 'vue-router'
     import RechercheVehicule from '../components/RechercheVehicule.vue'
     import CarPresentationCard from '../components/CarPresentationCard.vue'
     import VehiculeServices from '@/services/VehiculeServices';
 
+    const router = useRouter()
+
+    const GoToFicheVehicule = (id: number) => {
+        router.push('fiche-vehicule/'+id) // ou `/route/avec/parametre`
+    }
+
     const listVehicules = ref([]);
+    const filterVehicule = ref({
+        startDate: '',
+        endDate: '',
+        ville: '',
+        type: 0, // 0 pour tous les types
+    });
 
     const handleFormSubmit = async (data: {startDate: string; endDate: string; ville: string; type: number; }) => {
         console.log('Données du formulaire :', data);
+        filterVehicule.value = data; // Mettre à jour le filtre avec les données du formulaire
         try {
             listVehicules.value = await VehiculeServices.searchVehicules(data)
             console.log('Liste des véhicules :', listVehicules)
@@ -24,7 +38,7 @@
             <RechercheVehicule @submit="handleFormSubmit" />
             
             <div v-if="listVehicules.length > 0" class="text-center flex flex-wrap justify-center mb-5">
-                <CarPresentationCard v-for="v in listVehicules" :vehicule="v" />
+                <CarPresentationCard v-for="v in listVehicules" :vehicule="v" @click="GoToFicheVehicule(v.id)" />
             </div>
 
         </div>

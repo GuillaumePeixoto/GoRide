@@ -3,22 +3,22 @@
         <div class="bg-white rounded-lg shadow-lg p-6 md:flex">
             <!-- Image du véhicule -->
             <div class="md:w-1/2">
-                <img :src="apiUrl+'/'+vehicule.photo_presentation" alt="Véhicule en location" class="w-full rounded-lg">
+                <img :src="apiUrl+'/'+vehicule.photoPresentation" alt="Véhicule en location" class="w-full rounded-lg">
             </div>
             <!-- Détails du véhicule -->
             <div class="md:w-1/2 md:pl-6 mt-6 md:mt-0">
                 <h2 class="text-3xl font-bold text-gray-800"> {{ vehicule.marque }} {{ vehicule.modele }} </h2>
-                <p class="text-gray-600 mt-2"> {{ vehicule.presentation_vehicule }} </p>
+                <p class="text-gray-600 mt-2"> {{ vehicule.presentationVehicule }} </p>
                 
                 <!-- Caractéristiques -->
                 <h3 class="text-xl font-semibold mt-4">Caractéristiques</h3>
                 <ul class="list-none pl-5 text-gray-600 mt-2" id="caracteristiques">
-                    <li><strong>Type :</strong> <span>{{ vehicule.type_vehicule }}</span></li>
+                    <li><strong>Type :</strong> <span>{{ vehicule.typeVehicule }}</span></li>
                     <li><strong>Type de carburant :</strong> <span>{{ vehicule.typeCarburant }}</span></li>
                     <li><strong>Boite de vitesse :</strong> <span>{{ vehicule.boiteDeVitesse }}</span></li>
                     <li><strong>Couleur :</strong> <span>{{ vehicule.couleur }}</span></li>
                     <li><strong>Kilométrage :</strong> <span>{{ vehicule.kilometrage }} km </span></li>
-                    <li><strong>Places :</strong> <span>{{ vehicule.nb_porte }}</span></li>
+                    <li><strong>Places :</strong> <span>{{ vehicule.nbPorte }}</span></li>
                 </ul>
 
                 <!-- Prix -->

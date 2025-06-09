@@ -6,6 +6,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue'
 
 // Vues
 import HomeView from '@/views/HomeView.vue'
+import FichePresentationVehicule from '@/views/FichePresentationVehicule.vue'
 import AboutView from '@/views/AboutView.vue'
 import InscriptionView from '@/views/InscriptionView.vue'
 import LoginView from '@/views/LoginView.vue'
@@ -26,6 +27,7 @@ const routes = [
         component: PublicLayout,
         children: [
             { path: '', name: 'home', component: HomeView },
+            { path: 'fiche-vehicule/:id', name: 'fiche-presentation-vehicule', component: FichePresentationVehicule },
             { path: 'about', name: 'about', component: AboutView },
             { path: 'inscription', name: 'inscription', component: InscriptionView },
             { path: 'connexion', name: 'login', component: LoginView }

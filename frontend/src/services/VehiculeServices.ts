@@ -67,5 +67,17 @@ export default {
             throw error;
         }
 
-    }
+    },
+
+    async getTarifJournalier(jours: number, tarifMax: number) {
+        const tarifMin = tarifMax / 2
+        const maxJourPalier = 8 // ou un autre seuil de stabilité
+
+        // On diminue progressivement vers le minimum jusqu’à maxJourPalier jours
+        const coeff = Math.min(jours, maxJourPalier) / maxJourPalier
+
+        const tarif = tarifMax - (tarifMax - tarifMin) * coeff
+
+        return Math.round(tarif)
+    },
 };

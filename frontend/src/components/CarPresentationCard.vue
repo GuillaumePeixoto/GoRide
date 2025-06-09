@@ -7,13 +7,13 @@ defineProps<{
     modele: string
     couleur: string
     kilometrage: number
-    nb_porte: number
-    type_vehicule: string
-    presentation_vehicule: string
+    nbPorte: number
+    typeVehicule: string
+    presentationVehicule: string
     remarque: string
     agence: { nom: string }
-    photo_presentation: string | null
-    photo_vehicule: string[]
+    photoPresentation: string | null
+    photoVehicule: string[]
   }
 }>()
 
@@ -25,8 +25,8 @@ const apiUrl = import.meta.env.VITE_PHP_API_URL;
     <div class="card mt-3 mx-2">
         <div class="imgCar">
             <img
-                v-if="vehicule.photo_presentation"
-                :src="apiUrl+'/'+vehicule.photo_presentation"
+                v-if="vehicule.photoPresentation"
+                :src="apiUrl+'/'+vehicule.photoPresentation"
                 alt="photo véhicule"
                 class="h-40 max-w-60 object-cover rounded mb-4 mx-auto"
             />
@@ -38,7 +38,7 @@ const apiUrl = import.meta.env.VITE_PHP_API_URL;
                 <div class="contentInfosHide">
                     <p class="mt-2 text-sm"><strong>Couleur:</strong> {{ vehicule.couleur }}</p>
                     <p class="text-sm"><strong>Kilométrage:</strong> {{ vehicule.kilometrage }} km</p>
-                    <p class="text-sm"><strong>Type:</strong> <span style="text-transform: uppercase;"> {{ vehicule.type_vehicule }}</span></p>
+                    <p class="text-sm"><strong>Type:</strong> <span style="text-transform: uppercase;"> {{ vehicule.typeVehicule }}</span></p>
                 </div>
             </div>
         </div>

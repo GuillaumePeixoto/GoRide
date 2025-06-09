@@ -39,11 +39,11 @@ class VehiculeController extends AbstractController
         $vehicule = new Vehicule();
         $vehicule->setMarque($data['marque']);
         $vehicule->setModele($data['modele']);
-        $vehicule->setNbPorte($data['nb_porte']);
+        $vehicule->setNbPorte($data['nbPorte']);
         $vehicule->setCouleur($data['couleur']);
         $vehicule->setPhotoPresentation(null);
         $vehicule->setKilometrage($data['kilometrage']);
-        $vehicule->setPresentationVehicule($data['presentation_vehicule'] ?? null);
+        $vehicule->setPresentationVehicule($data['presentationVehicule'] ?? null);
         $vehicule->setRemarque($data['remarque'] ?? null);
         $vehicule->setPhotoVehicule([]);
 
@@ -51,7 +51,7 @@ class VehiculeController extends AbstractController
             $vehicule->setTypeVehicule('Utilitaire');
             $vehicule->setIsUtilitaire(1);
         } else {
-            $vehicule->setTypeVehicule($data['type_vehicule'] ?? '');
+            $vehicule->setTypeVehicule($data['typeVehicule'] ?? '');
             $vehicule->setIsUtilitaire(0);
         }
         
@@ -62,7 +62,7 @@ class VehiculeController extends AbstractController
         
         $vehicule->setAgence($agence);
 
-        $photoPresentation = $request->files->get('photo_presentation');
+        $photoPresentation = $request->files->get('photoPresentation');
         if ($photoPresentation) {
             $newFilename = FileHelper::getHashedFileName($photoPresentation);
 
@@ -71,7 +71,7 @@ class VehiculeController extends AbstractController
         }
 
         // Gestion des photos multiples
-        $photoVehiculeFiles = $request->files->all('photo_vehicule');
+        $photoVehiculeFiles = $request->files->all('photoVehicule');
         $photoVehiculesPaths = [];
         if ($photoVehiculeFiles) {
             foreach ($photoVehiculeFiles as $photoFile) {
@@ -104,17 +104,20 @@ class VehiculeController extends AbstractController
 
         $vehicule->setMarque($data['marque']);
         $vehicule->setModele($data['modele']);
-        $vehicule->setNbPorte($data['nb_porte']);
+        $vehicule->setNbPorte($data['nbPorte']);
         $vehicule->setCouleur($data['couleur']);
         $vehicule->setKilometrage($data['kilometrage']);
-        $vehicule->setPresentationVehicule($data['presentation_vehicule'] ?? null);
+        $vehicule->setBoiteDeVitesse($data['boiteDeVitesse'] ?? '');
+        $vehicule->setTypeCarburant($data['typeCarburant'] ?? '');
+        $vehicule->setPrixJour($data['prixJour'] ?? 0);
+        $vehicule->setPresentationVehicule($data['presentationVehicule'] ?? null);
         $vehicule->setRemarque($data['remarque'] ?? null);
         
         if ($data['isUtilitaire'] && $data['isUtilitaire'] == 1) {
             $vehicule->setTypeVehicule('Utilitaire');
             $vehicule->setIsUtilitaire(1);
         } else {
-            $vehicule->setTypeVehicule($data['type_vehicule'] ?? '');
+            $vehicule->setTypeVehicule($data['typeVehicule'] ?? '');
             $vehicule->setIsUtilitaire(0);
         }
 
@@ -125,7 +128,7 @@ class VehiculeController extends AbstractController
         $vehicule->setAgence($agence);
 
         // Si une nouvelle photo de présentation est envoyée
-        $photoPresentation = $request->files->get('photo_presentation');
+        $photoPresentation = $request->files->get('photoPresentation');
         if ($photoPresentation) {
             $newFilename = FileHelper::getHashedFileName($photoPresentation);
             $photoPresentation->move($this->getParameter('uploads_directory') . '/vehicules', $newFilename);
@@ -133,7 +136,7 @@ class VehiculeController extends AbstractController
         }
 
         // Si de nouvelles photos de véhicules sont envoyées
-        $photoVehiculeFiles = $request->files->all('photo_vehicule');
+        $photoVehiculeFiles = $request->files->all('photoVehicule');
         if ($photoVehiculeFiles) {
             $photoVehiculesPaths = [];
             foreach ($photoVehiculeFiles as $photoFile) {

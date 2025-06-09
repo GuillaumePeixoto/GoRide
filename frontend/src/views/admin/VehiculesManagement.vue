@@ -11,8 +11,8 @@
             <div class="flex justify-end mb-4 gap-2">
                 <!-- <button @click="viewMode = 'list'" :class="buttonClass('list')">Liste</button>
                 <button @click="viewMode = 'grid'" :class="buttonClass('grid')">Grille</button> -->
-                <button>Liste</button>
-                <button>Grille</button>
+                <button class="cursor-pointer">Liste</button>
+                <button class="cursor-pointer">Grille</button>
             </div>
 
             <div  v-if="showForm">
@@ -36,7 +36,7 @@
                         <td class="py-2 text-center text-white">{{ vehicule.marque }}</td>
                         <td class="py-2 text-center text-white">{{ vehicule.modele }}</td>
                         <td class="py-2 text-center text-white">{{ vehicule.kilometrage }}</td> 
-                        <td class="py-2 text-center text-white capitalize-first">{{ vehicule.type_vehicule }}</td>
+                        <td class="py-2 text-center text-white capitalize-first">{{ vehicule.typeVehicule }}</td>
                         <td class="py-2 text-center text-white capitalize-first">{{ vehicule.agence.nom }}</td>
                         <td class="py-2 text-center text-white">
                             <button @click="voirDetails(vehicule.id)" class="rounded-md bg-sky-500/100 px-2 text-white-600 hover:bg-sky-600 hover:text-white cursor-pointer">
