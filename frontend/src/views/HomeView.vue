@@ -8,7 +8,28 @@
     const router = useRouter()
 
     const GoToFicheVehicule = (id: number) => {
-        router.push('fiche-vehicule/'+id) // ou `/route/avec/parametre`
+
+        let startDate = localStorage.getItem('startDateFilter') || '';
+        let endDate = localStorage.getItem('endDateFilter') || '';
+
+        if (startDate == "" || !verifyDateUntilTomorrow(startDate)) {
+            startDate = ''
+        }
+
+        if (endDate == "" || !verifyDateUntilTomorrow(endDate)) {
+            endDate = ''
+        }
+
+        console.log('Navigating to fiche-vehicule with id:', id, 'startDate:', startDate, 'endDate:', endDate);
+
+        router.push({
+            name: 'fiche-presentation-vehicule',
+            params: { id },
+            query: {
+                start: startDate,
+                end: endDate
+            }
+        })
     }
 
     const listVehicules = ref([]);
@@ -28,6 +49,13 @@
         } catch (error) {
             console.error('Erreur lors de la recherche de véhicules :', error)
         }
+    }
+
+    function verifyDateUntilTomorrow(date: string): boolean {
+        const today = new Date();
+        const selectedDate = new Date(date);
+
+        return selectedDate > today;
     }
     
 </script>

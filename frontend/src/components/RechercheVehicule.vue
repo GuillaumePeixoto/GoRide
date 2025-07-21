@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-    import { ref, onMounted } from 'vue'
+    import { ref, onMounted, watch } from 'vue'
     import AgenceServices from '@/services/AgenceServices';
 
     // Déclaration des données
@@ -15,6 +15,8 @@
     const villes = ref<string[]>([]);
     const erreur = ref('');
 
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0]
+
     // Fonction pour initialiser les datepickers
     onMounted(async () => {
         try {
@@ -24,15 +26,36 @@
         }
     })
 
+    watch(
+        () => [form.value.startDate, form.value.startDate], // on observe les deux champs
+        () => {
+
+            if (form.value.startDate && form.value.startDate !== '' && !verifyDateUntilTomorrow(form.value.startDate) ) {
+                form.value.startDate = ''
+            }
+            if (form.value.endDate && form.value.endDate !== '' && !verifyDateUntilTomorrow(form.value.endDate) ) {
+                form.value.endDate = ''
+            }
+
+            localStorage.setItem('startDateFilter', form.value.startDate);
+            localStorage.setItem('endDateFilter', form.value.endDate);
+        }
+    )
+
     const storedStart = localStorage.getItem('startDateFilter');
     const storedEnd = localStorage.getItem('endDateFilter');
 
-    console.log(storedStart, storedEnd);
+    if ((storedStart && storedStart !== '' && !verifyDateUntilTomorrow(storedStart)) || (storedEnd && storedEnd !== '' && !verifyDateUntilTomorrow(storedEnd)) ) {
+        localStorage.setItem('startDateFilter', '');
+        localStorage.setItem('endDateFilter', '');
+        form.value.startDate = '';
+        form.value.endDate = '';
+    }
 
-    if (storedStart && storedStart !== '') {
+    if (storedStart && storedStart !== '' && verifyDateUntilTomorrow(storedStart) ) {
         form.value.startDate = storedStart;
     }
-    if (storedEnd && storedEnd !== '') {
+    if (storedEnd && storedEnd !== '' && verifyDateUntilTomorrow(storedEnd) ) {
         form.value.endDate = storedEnd
     }
 
@@ -46,12 +69,20 @@
             erreur.value = "Les dates sélectionnées ne sont pas valides";
             return;
         }
+
         localStorage.setItem('startDateFilter', form.value.startDate);
         localStorage.setItem('endDateFilter', form.value.endDate);
         localStorage.setItem('villeFilter', form.value.ville);
         localStorage.setItem('typeFilter', form.value.type.toString());
         erreur.value = '';
         emit('submit', form.value);
+    }
+
+    function verifyDateUntilTomorrow(date: string): boolean {
+        const today = new Date();
+        const selectedDate = new Date(date);
+
+        return selectedDate > today;
     }
 
 </script>
@@ -62,9 +93,9 @@
     </div>
     <form @submit.prevent="handleSubmit" class="search-container">
         
-        <input type="date" class="filterInput" placeholder="Date de départ" v-model="form.startDate">
+        <input type="date" class="filterInput" :min="tomorrow" placeholder="Date de départ" v-model="form.startDate">
 
-        <input type="date" class="filterInput" placeholder="Date d'arrivée"  v-model="form.endDate">
+        <input type="date" class="filterInput" :min="tomorrow" placeholder="Date d'arrivée"  v-model="form.endDate">
 
         <select id="ville-select" class="pe-2 text-black filterInput" v-model="form.ville">
             <option value="" selected>Choisir une ville</option>

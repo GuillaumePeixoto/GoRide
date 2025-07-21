@@ -38,7 +38,9 @@
     const handleLogin = async () => {
         try {
             await loginUser(email.value, password.value)
-            router.push('/') // redirection après login
+            const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
+            localStorage.removeItem('redirectAfterLogin'); // Nettoyage
+            router.push(redirectPath);
         } catch (err) {
             console.error('Erreur de connexion', err)
         }

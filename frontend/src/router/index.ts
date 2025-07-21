@@ -10,6 +10,7 @@ import FichePresentationVehicule from '@/views/FichePresentationVehicule.vue'
 import AboutView from '@/views/AboutView.vue'
 import InscriptionView from '@/views/InscriptionView.vue'
 import LoginView from '@/views/LoginView.vue'
+import ConfirmationPage from '@/views/ConfirmationPage.vue'
 import AdminDashboard from '@/views/admin/AdminDashboard.vue'
 import ReservationsManagement from '@/views/admin/ReservationsManagement.vue'
 import AgencesManagement from '@/views/admin/AgencesManagement.vue'
@@ -30,7 +31,8 @@ const routes = [
             { path: 'fiche-vehicule/:id', name: 'fiche-presentation-vehicule', component: FichePresentationVehicule },
             { path: 'about', name: 'about', component: AboutView },
             { path: 'inscription', name: 'inscription', component: InscriptionView },
-            { path: 'connexion', name: 'login', component: LoginView }
+            { path: 'connexion', name: 'login', component: LoginView },
+            { path: 'confirmation', name: 'confirmation', component: ConfirmationPage }
         ]
     },
     {
@@ -50,24 +52,29 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes
 })
 
 // Guard d'accès
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = AuthService.isLoggedIn()
-  const isAdmin = AuthService.getUserRole() === 'ROLE_ADMIN'
+    const isLoggedIn = AuthService.isLoggedIn()
+    const isAdmin = AuthService.getUserRole() === 'ROLE_ADMIN'
 
-  if (to.meta.requiresAuth && !isLoggedIn) {
-    return next('/connexion')
-  }
+    if (to.path === '/connexion' && from.path !== '/connexion') {
+        localStorage.setItem('redirectAfterLogin', from.fullPath);
+    }
 
-  if (to.meta.requiresAdmin && !isAdmin) {
-    return next('/')
-  }
+    if (to.meta.requiresAuth && !isLoggedIn) {
+        localStorage.setItem('redirectAfterLogin', to.fullPath);
+        return next('/connexion')
+    }
 
-  next()
+    if (to.meta.requiresAdmin && !isAdmin) {
+        return next('/')
+    }
+
+    next()
 })
 
 export default router

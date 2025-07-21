@@ -38,78 +38,46 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Date de début -->
                             <div>
-                                <label for="dateDebut" class="block text-gray-700 font-semibold mb-1">Date de début :</label>
-                                <input type="date" id="dateDebut" @change="updateSessionDate" v-model="startDateFilter" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />    
+                                <label for="startDate" class="block text-gray-700 font-semibold mb-1">Date de début :</label>
+                                <input type="date" id="startDate" @change="updateDatePicker" v-model="startDateFilter" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />    
                             </div>
                             <div>
-                                <label for="dateDebut" class="block text-gray-700 font-semibold mb-1">Date de fin :</label>
-                                <input type="date" id="dateDebut" @change="updateSessionDate" v-model="endDateFilter" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />    
+                                <label for="endDate" class="block text-gray-700 font-semibold mb-1">Date de fin :</label>
+                                <input type="date" id="endDate" @change="updateDatePicker" v-model="endDateFilter" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />    
                             </div>
                         </div>
                     </div>
                     <h2 class="mb-2 font-bold"> Options supplémentaires disponibles : </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Siège bébé -->
-                        <label class="border rounded-xl p-4 flex gap-3 items-start cursor-pointer hover:shadow transition">
-                            <input type="checkbox" id="optionSiegeBebe" class="my-auto accent-blue-600" />
-                            <div class="my-auto">
-                                <span class="font-semibold text-gray-800">Siège bébé</span>
-                                <p class="text-sm text-gray-600">
-                                    7 €/jour, réduit à 5 €/jour pour toute réservation de plus de 7 jours.
-                                </p>
-                            </div>
-                        </label>
 
-                        <!-- Kilométrage illimité -->
-                        <label class="border rounded-xl p-4 flex gap-3 items-start cursor-pointer hover:shadow transition">
-                            <input type="checkbox" id="optionKilometrage" class="my-auto accent-blue-600" />
+                        <label class="border rounded-xl p-4 flex gap-3 items-start cursor-pointer hover:shadow transition" v-for="(option, key) in optionsList" :key="key">
+                            <input type="checkbox" :value="key" v-model="selectedOptions" class="my-auto accent-blue-600" />
                             <div class="my-auto">
-                                <span class="font-semibold text-gray-800">Kilométrage illimité</span>
+                                <span class="font-semibold text-gray-800"> {{ option.label }} </span>
                                 <p class="text-sm text-gray-600">
-                                    Si l’option n’est pas sélectionnée, vous bénéficiez de 200 km par jour inclus. Des frais s’appliquent en cas de dépassement
-                                </p>
-                            </div>
-                        </label>
-
-                        <!-- Dépôt dans une autre agence -->
-                        <label class="border rounded-xl p-4 flex gap-3 items-start cursor-pointer hover:shadow transition">
-                            <input type="checkbox" id="optionDepot" class="my-auto accent-blue-600" />
-                            <div class="my-auto">
-                                <span class="font-semibold text-gray-800">Dépôt dans une autre agence</span>
-                                <p class="text-sm text-gray-600">
-                                    15 € + 0,40 €/km entre les agences. ( La somme sera à payer à la restitution du véhicule )
-                                </p>
-                            </div>
-                        </label>
-
-                        <!-- Assurance tous risques -->
-                        <label class="border rounded-xl p-4 flex gap-3 items-start cursor-pointer hover:shadow transition">
-                            <input type="checkbox" id="optionAssurance" class="my-auto accent-blue-600" />
-                            <div class="my-auto">
-                                <span class="font-semibold text-gray-800">Assurance tous risques</span>
-                                <p class="text-sm text-gray-600">
-                                    15 % à 25 % du prix de la location hors option selon la durée.
-                                    <span title="Le tarif est proportionnel à la durée : 25 % pour 1-2 jours, 20 % pour 3-6 jours, 15 % au-delà." class="cursor-help text-blue-500">ℹ️</span>
+                                    {{ option.description }}
                                 </p>
                             </div>
                         </label>
                     </div>
 
-                    <div class="flex justify-end ">
-                        <button @click.prevent="editVehicule(vehicule.id)" class="mt-6 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                    <div class="flex justify-between mt-6 ">
+                        <div class="my-auto font-bold text-xl">
+                            Total : {{ totalPrice }} €
+                        </div>
+                        <button :disabled="!datesValid" @click.prevent="goToConfirmation()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700  disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400">
                             Valider la réservation
                         </button>
                     </div>
                 </div>
             </form>
-
-
         </div>
     </main>
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref } from 'vue'
+    import { onMounted, ref, watch, computed } from 'vue'
     import { useRoute, useRouter } from 'vue-router'
     import VehiculeServices from '@/services/VehiculeServices';
 
@@ -120,10 +88,12 @@
 
     const startDateFilter = ref('')
     const endDateFilter = ref('')
-
-    const editVehicule = (id: number) => {
-        
-    }
+    const nbDaysLocation = ref(0)
+    const pricePerDays = ref(vehicule.value?.prixJour ?? 0);
+    const totalPrice = ref(0)
+    const selectedOptions = ref<string[]>([]);
+    const priceDetails = ref<string[]>([]);
+    const optionsList = ref({});
 
     const GoBackToResearch = () => {
         router.push({ name: 'home'})
@@ -132,31 +102,113 @@
     const storedStart = localStorage.getItem('startDateFilter');
     const storedEnd = localStorage.getItem('endDateFilter');
 
-    if (storedStart && storedStart !== '') {
+    if (storedStart && storedStart !== '' && verifyDateUntilTomorrow(storedStart)) {
         startDateFilter.value = storedStart
     }
-    if (storedEnd && storedEnd !== '') {
+    if (storedEnd && storedEnd !== '' && verifyDateUntilTomorrow(storedEnd)) {
         endDateFilter.value = storedEnd
     }
 
-    const updateSessionDate = () => {
-        localStorage.setItem('startDateFilter', startDateFilter.value);
-        localStorage.setItem('endDateFilter', endDateFilter.value);
-    }
 
     onMounted(async () => {
         const id = Number(route.params.id)
         vehicule.value = await VehiculeServices.getVehicule(id);
-        console.log(vehicule.value);
+        optionsList.value = VehiculeServices.getOptionsList(vehicule.value.prixJour);
+
+        loadFromQueryParams();
+
+        if(startDateFilter.value != '' && endDateFilter.value != '') {
+            majPriceValues();
+        }
     })
 
-    document.querySelectorAll('#caracteristiques li span').forEach(span => {
-        let text = span.textContent;
-        console.log(text);
-        if (text.length > 0) {
-            span.textContent = text.charAt(0).toUpperCase() + text.slice(1);
-        }
+
+    const datesValid = computed(() => {
+        if (!startDateFilter.value || !endDateFilter.value) return false
+
+        const start = new Date(startDateFilter.value)
+        const end = new Date(endDateFilter.value)
+
+        return start <= end && verifyDateUntilTomorrow(startDateFilter.value) && verifyDateUntilTomorrow(endDateFilter.value)
     });
+    
+    watch(selectedOptions, (newVal, oldVal) => {
+        // Tu peux aussi appeler une fonction spécifique
+        majPriceValues();
+    });
+
+    const updateDatePicker = () => {
+
+        startDateFilter.value = verifyDateUntilTomorrow(startDateFilter.value) ? startDateFilter.value : '';
+        endDateFilter.value = verifyDateUntilTomorrow(endDateFilter.value) ? endDateFilter.value : '';
+        
+        localStorage.setItem('startDateFilter', startDateFilter.value);
+        localStorage.setItem('endDateFilter', endDateFilter.value);
+
+        majPriceValues();
+    }
+
+    function loadFromQueryParams() {
+        const query = route.query
+
+        startDateFilter.value = verifyDateUntilTomorrow(query.start as string) ? query.start as string : '';
+        endDateFilter.value = verifyDateUntilTomorrow(query.end as string) ? query.end as string : '';
+
+        if (query.options) {
+            selectedOptions.value = (query.options as string).split('-')
+        } else {
+            selectedOptions.value = []
+        }
+    }
+
+    function majPriceValues(){
+        nbDaysLocation.value = VehiculeServices.calculateDaysDifference(startDateFilter.value, endDateFilter.value);
+        pricePerDays.value = VehiculeServices.getTarifJournalier(nbDaysLocation.value, vehicule.value.prixJour);
+        optionsList.value.kilometrageIllimite.price = pricePerDays.value * 0.05 * nbDaysLocation.value;
+        optionsList.value.assuranceTousRisque.price = VehiculeServices.calculateAssuranceTousRisquesPrice(pricePerDays.value, nbDaysLocation.value);
+
+        let prixSiegeBebe = 7
+        if(nbDaysLocation.value >= 7) {
+            prixSiegeBebe = 5;
+        }
+        optionsList.value.siegeBebe.price = prixSiegeBebe * nbDaysLocation.value;
+
+        totalPrice.value = VehiculeServices.calculateTotalPrice(nbDaysLocation.value, pricePerDays.value, selectedOptions.value, optionsList.value);
+
+        priceDetails.value = VehiculeServices.getPriceDetails(nbDaysLocation.value, pricePerDays.value, selectedOptions.value, optionsList.value);
+        console.log('Price details:', priceDetails.value);
+
+        router.push({ 
+            query: {
+                start: startDateFilter.value,
+                end: endDateFilter.value,
+                options: selectedOptions.value.join('-'),
+            }
+        })
+    }
+
+    function verifyDateUntilTomorrow(date: string): boolean {
+        const today = new Date();
+        const selectedDate = new Date(date);
+
+        return selectedDate > today;
+    }
+
+    function goToConfirmation() {
+
+        const reservationData = {
+            startDate: startDateFilter.value,
+            endDate: endDateFilter.value,
+            selectedOptions: selectedOptions.value,
+            priceDetails: priceDetails.value,
+            vehiculeId: vehicule.value.id,
+            totalPrice: totalPrice.value
+        }
+
+        localStorage.setItem('reservation', JSON.stringify(reservationData))
+        router.push({ name: 'confirmation' })
+    }
+
 </script>
 
 <style scoped>
