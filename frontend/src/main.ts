@@ -51,3 +51,40 @@ function validateStoredDates() {
     }
 
 }
+
+export function createFormData(data: any): FormData {
+    const formData = new FormData();
+    const valueToConvert = data.value !== undefined ? data.value : data;
+
+    const buildFormData = (obj: any, parentKey = '') => {
+        if (typeof obj !== 'object' || obj === null) {
+            formData.append(parentKey, obj);
+            return;
+        }
+
+        if (Array.isArray(obj)) {
+            // Pour les tableaux, on utilise l'indice comme clé
+            obj.forEach((item, index) => {
+                buildFormData(item, `${parentKey}[${index}]`);
+            });
+        } else {
+            // Pour les objets, on utilise le nom de la propriété
+            for (const key in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                    const propValue = obj[key];
+                    const newKey = parentKey ? `${parentKey}[${key}]` : key;
+                    buildFormData(propValue, newKey);
+                }
+            }
+        }
+    };
+
+    buildFormData(valueToConvert);
+
+    // Débogage : vérifier le contenu de FormData
+    for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+    }
+
+    return formData;
+}

@@ -110,11 +110,11 @@ export default {
 
         selectedOptions.forEach(option => {
             if (optionsList[option]) {
-                total += parseFloat(optionsList[option].price.toFixed(2));
+                total += parseFloat(optionsList[option].price);
             }
         });
 
-        return total;
+        return total.toFixed(2);
     },
 
     getPriceDetails(nbDays: number, pricePerDay: number, selectedOptions: string[], optionsList: any) {

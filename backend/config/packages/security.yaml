@@ -30,4 +30,5 @@ security:
         - { path: ^/api/vehicule/\d+$, roles: ROLE_ADMIN, methods: [DELETE] }
         - { path: ^/api/vehicule/\d+$, roles: ROLE_ADMIN, methods: [POST] }
         - { path: ^/api/users$, roles: ROLE_ADMIN, methods: [GET] }
+        - { path: ^/api/reservation$, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

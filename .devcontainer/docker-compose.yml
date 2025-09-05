@@ -11,6 +11,7 @@ services:
     ports:
       - "127.0.0.1:8000:8000"  # Symfony
       - "127.0.0.1:5173:5173"  # Vite
+      - "9003:9003"            # Xdebug
     command: bash -c "cd backend && php -S 0.0.0.0:8000 -t public"
     depends_on:
       - db

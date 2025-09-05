@@ -4,14 +4,19 @@
   "service": "app",                           // Service principal
   "workspaceFolder": "/workspace",            // Dossier de travail dans le conteneur
   "forwardPorts": [8081],
-  "postCreateCommand": "bash -c 'cd /workspace/frontend && npm install && cd ../backend && composer install'",
+  "postCreateCommand": "bash -c 'cd /workspace/frontend && npm install && cd ../backend && composer install && git config --global --add safe.directory /workspace'",
   "customizations": {
     "vscode": {
       "extensions": [
         "bmewburn.vscode-intelephense-client",
         "octref.vetur",
-        "esbenp.prettier-vscode"
-      ]
+        "esbenp.prettier-vscode",
+        "felixfbecker.php-debug"
+      ],
+      "settings": {
+        "php.debug.port": 9003, // Configure l'écoute de VS Code sur le port 9003
+        "php.debug.mode": "debug"
+      }
     }
   }
 }

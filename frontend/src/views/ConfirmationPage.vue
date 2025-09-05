@@ -3,7 +3,7 @@
         <div class="bg-white shadow-md rounded-lg p-6">
             <h1 class="text-2xl font-bold mb-4 text-center">Récapitulatif de la réservation</h1>
 
-            <div  v-if="reservation" class="border rounded p-4 w-full max-w-xl mx-auto bg-white">
+            <div v-if="reservation" class="border rounded p-4 w-full max-w-xl mx-auto bg-white">
 
                 <h2 class="mb-4 flex justify-between"><span class="font-semibold">Véhicule</span> {{ vehiculeInfos.marque + " " + vehiculeInfos.modele }} </h2>
                 <h2 class="mb-4 flex justify-between"><span class="font-semibold">Dates :</span> {{ new Date(reservation.startDate).toLocaleDateString('fr-FR') }} au {{ new Date(reservation.endDate).toLocaleDateString('fr-FR') }}</h2>
@@ -24,10 +24,7 @@
                     </span>
                 </div>
             </div>
-
-            <div v-else>
-                <p class="text-red-600">Aucune réservation trouvée. Veuillez recommencer.</p>
-            </div>
+            <button class="p-2 bg-blue-500 rounded flex ml-auto cursor-pointer" @click="sendReservation">Confirmer la réservation</button>
         </div>
     </main>
 </template>
@@ -37,6 +34,9 @@ import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import VehiculeServices from '@/services/VehiculeServices';
+import ReservationServices from '@/services/ReservationServices';
+import ReservationsManagement from './admin/ReservationsManagement.vue';
+import { createFormData } from '@/main.ts';
 
 const { isLoggedIn } = useAuth()
 
@@ -53,8 +53,6 @@ onMounted(async () => {
     }
 
     reservation.value = JSON.parse(data)
-    console.log('Données de réservation récupérées depuis localStorage :', reservation.value)
-    console.log('Données de réservation récupérées depuis localStorage :', reservation.value.priceDetails)
 
     if (reservation.value?.vehiculeId) {
         try {
@@ -64,5 +62,15 @@ onMounted(async () => {
         }
     }
 })
+
+const sendReservation = async () => {
+
+    try {
+        let reservationInformations = createFormData(reservation)
+        await ReservationServices.sendReservationInfos(reservationInformations)
+    } catch (error) {
+        console.error('Erreur :', error)
+    }
+}
 
 </script>
