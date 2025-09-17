@@ -2,9 +2,12 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import setupAxiosInterceptor from './utils/axiosInterceptor'
 
 import App from './App.vue'
 import router from './router'
+
+setupAxiosInterceptor() // Active l'intercepteur
 
 const app = createApp(App)
 
