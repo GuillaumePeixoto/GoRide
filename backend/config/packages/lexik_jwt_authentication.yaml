@@ -2,4 +2,4 @@ lexik_jwt_authentication:
     secret_key: '%env(resolve:JWT_SECRET_KEY)%'
     public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
     pass_phrase: 'b456a0b0dcf0cec078c6ae143b0bc991977b3a4397dc5c0d50acb0b8aca148be'
-    token_ttl: 3600
+    token_ttl: 7200 # 2 hours
