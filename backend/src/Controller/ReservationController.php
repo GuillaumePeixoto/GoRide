@@ -4,41 +4,51 @@ namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Entity\Agence;
+use App\Entity\Vehicule;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 final class ReservationController extends AbstractController
 {
     #[Route('api/reservation', name: 'api_add_reservation', methods: ['POST'])]
-    public function addReservation(Request $request, EntityManagerInterface $em): JsonResponse
+    public function addReservation(Request $request, EntityManagerInterface $em, Security $security): JsonResponse
     {
+
+        $user = $security->getUser(); // Récupère l'utilisateur actuellement authentifié
+        if(!$user){
+            return $this->json(['error' => 'Utilisateur non authentifié.'], 401);
+        }
+
         $data = $request->request->all();
 
+        $reservation = new Reservation();
+        $reservation->setDateDebut(new \DateTime($data['startDate']));
+        $reservation->setDateFin(new \DateTime($data['endDate']));
 
-        return $this->json($request->request->all());
+        // On récupère le véhicule avec l'id
+        $vehiculeId = $data['vehiculeId'];
+        $vehicule = $em->getRepository(Vehicule::class)->find($vehiculeId);
 
-        $vehicule = new Reservation();
-        // $vehicule->setMarque($data['marque']);
-        // $vehicule->setModele($data['modele']);
-        // $vehicule->setNbPorte($data['nbPorte']);
-        // $vehicule->setCouleur($data['couleur']);
-        // $vehicule->setPhotoPresentation(null);
-        // $vehicule->setKilometrage($data['kilometrage']);
-        // $vehicule->setPresentationVehicule($data['presentationVehicule'] ?? null);
-        // $vehicule->setRemarque($data['remarque'] ?? null);
-        // $vehicule->setPhotoVehicule([]);
-        
-        $agence = $em->getRepository(Agence::class)->find($data['agence']);
-        if (!$agence) {
-            return $this->json(['message' => 'Agence non trouvée'], 404);
+        if (!$vehicule) {
+            return $this->json(['error' => 'Véhicule non trouvé.'], 404);
         }
-        
-        $vehicule->setAgence($agence);
 
-        $em->persist($vehicule);
+        if(empty($data['priceDetails']) || !is_array($data['priceDetails']) || !isset($data['totalPrice'])){
+            return $this->json(['error' => 'Détails de prix invalides.'], 404);
+        }
+
+        $reservation->setVehicule($vehicule);
+        $reservation->setUser($user);
+        $reservation->setStatut('En attente');
+        $reservation->setRemarque($data['remarque'] ?? null);
+        $reservation->setDetailReservation($data['priceDetails'] ?? []);
+        $reservation->setPrixTotal($data['totalPrice'] ?? 0.0);
+
+        $em->persist($reservation);
         $em->flush();
 
         return $this->json([
