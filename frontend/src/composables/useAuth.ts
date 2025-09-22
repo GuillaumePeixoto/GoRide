@@ -26,7 +26,6 @@ export function useAuth() {
             const payload = JSON.parse(payloadJson)
 
             const roles = payload.roles || []
-            console.log(roles)
             const userRole = roles.includes('ROLE_ADMIN') ? 'ROLE_ADMIN' : 'ROLE_USER'
 
             // Stocker le rôle

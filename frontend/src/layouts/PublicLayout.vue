@@ -13,8 +13,6 @@ const { loginUser ,logoutUser ,isAuthenticated, isAdmin } = useAuth()
 const router = useRouter()
 const route = useRoute()
 
-console.log(isAuthenticated.value)
-
 const navigation = computed(() => {
   if (isAuthenticated.value) {
     return []

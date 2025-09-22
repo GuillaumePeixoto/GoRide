@@ -90,7 +90,7 @@
     const endDateFilter = ref('')
     const nbDaysLocation = ref(0)
     const pricePerDays = ref(vehicule.value?.prixJour ?? 0);
-    const totalPrice = ref(0)
+    const totalPrice = ref('0')
     const selectedOptions = ref<string[]>([]);
     const priceDetails = ref<string[]>([]);
     const optionsList = ref({});
@@ -176,7 +176,6 @@
         totalPrice.value = VehiculeServices.calculateTotalPrice(nbDaysLocation.value, pricePerDays.value, selectedOptions.value, optionsList.value);
 
         priceDetails.value = VehiculeServices.getPriceDetails(nbDaysLocation.value, pricePerDays.value, selectedOptions.value, optionsList.value);
-        console.log('Price details:', priceDetails.value);
 
         router.push({ 
             query: {

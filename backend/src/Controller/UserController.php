@@ -6,21 +6,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use App\Repository\UserRepository;
 
+
 final class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user')]
-    public function index(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
-    }
 
     #[Route('/api/users', methods: ['GET'])]
     public function list(UserRepository $userRepository): JsonResponse
@@ -29,7 +23,24 @@ final class UserController extends AbstractController
         return $this->json($users, 200, [], ['groups' => 'user:read']);
     }
 
-    #[Route('/user/inscription', name: 'api_register', methods: ['POST'])]
+    #[Route('/api/user/{id}', name: 'api_user_get', methods: ['GET'])]
+    public function getUserById(User $user): JsonResponse
+    {
+        return $this->json($user, 200, [], ['groups' => 'user:read']);
+    }
+
+    #[Route('/api/currentuser/', name: 'api_current_user_get', methods: ['GET'])]
+    public function getCurrentUser(Security $security): JsonResponse
+    {
+        $user = $security->getUser(); // Récupère l'utilisateur actuellement authentifié
+        if(!$user){
+            return $this->json(['error' => 'Utilisateur non authentifié.'], 401);
+        }
+
+        return $this->json($user, 200, [], ['groups' => 'user:read']);
+    }
+
+    #[Route('/api/user/inscription', name: 'api_register', methods: ['POST'])]
     public function register(Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);

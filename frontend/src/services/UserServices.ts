@@ -19,7 +19,7 @@ export interface RegisterForm {
 export default {
     async registerUser(formData: RegisterForm) {
         try {
-            const response = await axios.post(`${API_URL}/user/inscription`, formData, {
+            const response = await axios.post(`${API_URL}/api/user/inscription`, formData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -44,4 +44,33 @@ export default {
             throw error;
         }
     },
+
+    async getUserById(id: number) {
+        try {
+            const response = await axios.get(`${API_URL}/api/user/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${AuthService.getToken()}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la récupération de l'utilisateur :", error);
+            throw error;
+        }
+    },
+
+    async getCurrentUser() {
+        try {
+            const response = await axios.get(`${API_URL}/api/currentuser`, {
+                headers: {
+                    Authorization: `Bearer ${AuthService.getToken()}`,
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la récupération de l'utilisateur courant :", error);
+            throw error;
+        }
+    }
 };

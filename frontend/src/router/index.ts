@@ -18,6 +18,7 @@ import VehiculesManagement from '@/views/admin/VehiculesManagement.vue'
 import VehiculeFiche from '@/views/admin/VehiculeFiche.vue'
 import VehiculeEdit from '@/views/admin/VehiculeEdit.vue'
 import UsersManagement from '@/views/admin/UsersManagement.vue'
+import ProfileView from '@/views/ProfileView.vue'
 
 // Auth
 import AuthService from '@/services/AuthService'
@@ -32,7 +33,8 @@ const routes = [
             { path: 'about', name: 'about', component: AboutView },
             { path: 'inscription', name: 'inscription', component: InscriptionView },
             { path: 'connexion', name: 'login', component: LoginView },
-            { path: 'confirmation', name: 'confirmation', component: ConfirmationPage }
+            { path: 'confirmation', name: 'confirmation', component: ConfirmationPage },
+            { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
         ]
     },
     {

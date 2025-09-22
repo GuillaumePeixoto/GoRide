@@ -60,6 +60,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private ?int $codePostal = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    #[Groups(['user:read'])]
+    private ?string $telephone = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -203,6 +207,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCodePostal(int $codePostal): static
     {
         $this->codePostal = $codePostal;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): static
+    {
+        $this->telephone = $telephone;
 
         return $this;
     }
