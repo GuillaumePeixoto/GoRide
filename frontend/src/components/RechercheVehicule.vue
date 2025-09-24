@@ -58,7 +58,12 @@
     if (storedEnd && storedEnd !== '' && verifyDateUntilTomorrow(storedEnd) ) {
         form.value.endDate = storedEnd
     }
-
+    if(localStorage.getItem('villeFilter')){
+        form.value.ville = localStorage.getItem('villeFilter') || '';
+    }
+    if(localStorage.getItem('typeFilter')){
+        form.value.type = parseInt(localStorage.getItem('typeFilter') || '0');
+    }
 
     const emit = defineEmits<{
     (e: 'submit', form: { startDate: string; endDate: string; ville: string; type: number; }): void;
@@ -83,6 +88,11 @@
         const selectedDate = new Date(date);
 
         return selectedDate > today;
+    }
+
+    
+    if((form.value.startDate && form.value.startDate !== '' && verifyDateUntilTomorrow(form.value.startDate)) || (form.value.endDate && form.value.endDate !== '' && verifyDateUntilTomorrow(form.value.endDate)) || form.value.ville !== '' ){
+        handleSubmit();
     }
 
 </script>

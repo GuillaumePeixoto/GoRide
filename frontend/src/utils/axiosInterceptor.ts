@@ -2,6 +2,8 @@
 import axios from 'axios'
 import AuthService from '@/services/AuthService'
 import router from '@/router' // Importez l'objet router ici
+import { useAuth } from '@/composables/useAuth'
+const {logoutUser} = useAuth()
 
 export default function setupAxiosInterceptor() {
     axios.interceptors.response.use(
@@ -12,6 +14,7 @@ export default function setupAxiosInterceptor() {
 
             if (status === 401 && errorMessage === 'Expired JWT Token') {
                 AuthService.logout()
+                logoutUser()
                 router.push({ name: 'login' })
             }
             return Promise.reject(error)

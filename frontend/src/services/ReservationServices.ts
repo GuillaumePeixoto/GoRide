@@ -34,6 +34,20 @@ export default {
         } catch (error) {
             console.error('Erreur :', error)
         }
+    },
+
+    async getAllReservations() {
+        try {
+            const response = await axios.get(API_URL + '/reservations', {
+                headers: {
+                    Authorization: `Bearer ${AuthService.getToken()}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des réservations :', error);
+            throw error;
+        }
     }
 
 };

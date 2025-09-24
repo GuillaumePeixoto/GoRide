@@ -20,8 +20,6 @@
             endDate = ''
         }
 
-        console.log('Navigating to fiche-vehicule with id:', id, 'startDate:', startDate, 'endDate:', endDate);
-
         router.push({
             name: 'fiche-presentation-vehicule',
             params: { id },
@@ -41,11 +39,9 @@
     });
 
     const handleFormSubmit = async (data: {startDate: string; endDate: string; ville: string; type: number; }) => {
-        console.log('Données du formulaire :', data);
         filterVehicule.value = data; // Mettre à jour le filtre avec les données du formulaire
         try {
             listVehicules.value = await VehiculeServices.searchVehicules(data)
-            console.log('Liste des véhicules :', listVehicules)
         } catch (error) {
             console.error('Erreur lors de la recherche de véhicules :', error)
         }

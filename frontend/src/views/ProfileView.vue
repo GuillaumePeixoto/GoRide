@@ -1,15 +1,40 @@
 <template>
-  <div v-if="user" class="profile-container">
+  <div v-if="user" class="lg:w-75/100  w-xl p-4 container mx-auto p-4 md:p-8 profile-container">
     <div class="profile-header">
       <h1>Mon Profil</h1>
       <p>Bienvenue, {{ user.prenom }} {{ user.nom }}</p>
     </div>
 
+    <div class="flex flex-col md:flex-row md:flex-wrap gap-4">
+
+        <div class="flex-1 p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Informations personnelles</h2>
+            <div class="user-info">
+                <p><strong>Nom :</strong> {{ user.nom }}</p>
+                <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+                <p><strong>Email :</strong> {{ user.email }}</p>
+                <p><strong>Téléphone :</strong> {{ user.telephone }}</p>
+            </div>
+            <button class="btn-edit mx-auto flex">Modifier les informations</button>
+        </div>
+
+        <div class="flex-1 p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Mes réservations en cours / à venir ( Nb en cours )</h2>
+        </div>
+      
+        <div class="w-full p-6 bg-white rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Historique des réservations</h2>
+        </div>
+
+    </div>
+
     <div class="section-card">
       <h2>Informations Personnelles</h2>
       <div class="user-info">
-        <p><strong>Nom :</strong> {{ user.nom }}</p>
-        <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+        <div class="flex">
+            <p class="flex-1"><strong>Nom :</strong> {{ user.nom }}</p>
+            <p class="flex-1"><strong>Prénom :</strong> {{ user.prenom }}</p>
+        </div>
         <p><strong>Email :</strong> {{ user.email }}</p>
         <p><strong>Téléphone :</strong> {{ user.telephone }}</p>
       </div>
@@ -143,9 +168,7 @@ onMounted(async () =>{
 <style scoped>
 /* Styles de base pour la mise en page */
 .profile-container {
-  max-width: 900px;
   margin: 2rem auto;
-  padding: 2rem;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -170,7 +193,6 @@ h1 {
 }
 
 h2 {
-  font-size: 1.8rem;
   margin-bottom: 1rem;
   color: #555;
   border-bottom: 2px solid #eee;

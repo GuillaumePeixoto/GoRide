@@ -28,21 +28,21 @@ export default {
         }
     },
 
-  logout() {
-    localStorage.removeItem('token')
-    isAuthenticated.value = false
-  },
+    logout() {
+        localStorage.removeItem('token')
+        isAuthenticated.value = false
+    },
 
-  getToken(): string | null {
-    return localStorage.getItem('token')
-  },
+    getToken(): string | null {
+        return localStorage.getItem('token')
+    },
 
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('token')
-  },
+    isLoggedIn(): boolean {
+        return !!localStorage.getItem('token')
+    },
 
-  getUserRole(): string | null {
-    return localStorage.getItem('userRole')
-  }
+    getUserRole(): string | null {
+        return localStorage.getItem('userRole')
+    }
   
 }

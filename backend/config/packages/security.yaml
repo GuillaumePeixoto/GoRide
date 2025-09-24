@@ -33,4 +33,5 @@ security:
         - { path: ^/api/user$, roles: ROLE_ADMIN, methods: [GET] }
         - { path: ^/api/currentuser$, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/reservation$, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api/reservations$, roles: ROLE_ADMIN, methods: [GET] }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

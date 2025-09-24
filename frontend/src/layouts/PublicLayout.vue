@@ -2,7 +2,6 @@
 
 import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 import { useAuth } from '@/composables/useAuth'
 
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
